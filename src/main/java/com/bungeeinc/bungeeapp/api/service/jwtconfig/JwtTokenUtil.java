@@ -13,6 +13,9 @@ import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import io.jsonwebtoken.Jwts;
+import org.springframework.stereotype.Component;
+
+@Component
 public class JwtTokenUtil implements Serializable {
 
     private static final long serialVersionUID = -2550185165626007488L;
