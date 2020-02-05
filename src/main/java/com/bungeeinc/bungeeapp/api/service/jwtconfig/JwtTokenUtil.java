@@ -22,7 +22,7 @@ public class JwtTokenUtil implements Serializable {
 
     public static final long JWT_TOKEN_VALIDITY = 5 * 60 * 60;
 
-    private String secret = "3604e30e01135d5e00821287ac91586206e2a8b5a8f8cd6084eafe52648f30c618198cee62cbfc4131856b4e8520299697260ad1033f9151766499bf5bde6b6e6fe67f6db3ccf8c55068af3759eeaeea34e6c4c6cbca4fa623b2d7c633074c96b684394344a55a852abfff2c844af280ee13162d2ddc63af9f32ffca6c1ed1c9b810d765944b664552e5e56399968eb70e7a11d013d00ade89bf8c4090";
+    private String secret = "";
 
     public String getUsernameFromToken(String token) {
         return getClaimFromToken(token, Claims::getSubject);

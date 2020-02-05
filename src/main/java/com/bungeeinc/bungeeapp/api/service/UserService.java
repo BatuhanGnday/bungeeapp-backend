@@ -48,4 +48,8 @@ public class UserService {
         );
         return new RegisterResponse(RegisterResponseType.SUCCESS);
     }
+
+    public User getByUsername(String username) {
+        return this.databaseService.getUserDao().getByUsername(username);
+    }
 }
