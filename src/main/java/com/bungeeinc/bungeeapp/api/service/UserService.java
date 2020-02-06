@@ -1,12 +1,12 @@
 package com.bungeeinc.bungeeapp.api.service;
 
 import com.bungeeinc.bungeeapp.api.service.jwtconfig.JwtTokenUtil;
-import com.bungeeinc.bungeeapp.api.service.model.endpoint.users.login.request.LoginRequest;
-import com.bungeeinc.bungeeapp.api.service.model.endpoint.users.login.response.LoginResponse;
-import com.bungeeinc.bungeeapp.api.service.model.endpoint.users.login.response.LoginResponseType;
-import com.bungeeinc.bungeeapp.api.service.model.endpoint.users.register.request.RegisterRequest;
-import com.bungeeinc.bungeeapp.api.service.model.endpoint.users.register.response.RegisterResponse;
-import com.bungeeinc.bungeeapp.api.service.model.endpoint.users.register.response.RegisterResponseType;
+import com.bungeeinc.bungeeapp.api.service.model.endpoint.user.login.request.LoginRequest;
+import com.bungeeinc.bungeeapp.api.service.model.endpoint.user.login.response.LoginResponse;
+import com.bungeeinc.bungeeapp.api.service.model.endpoint.user.login.response.LoginResponseType;
+import com.bungeeinc.bungeeapp.api.service.model.endpoint.user.register.request.RegisterRequest;
+import com.bungeeinc.bungeeapp.api.service.model.endpoint.user.register.response.RegisterResponse;
+import com.bungeeinc.bungeeapp.api.service.model.endpoint.user.register.response.RegisterResponseType;
 import com.bungeeinc.bungeeapp.database.DatabaseService;
 import com.bungeeinc.bungeeapp.database.models.User;
 import org.springframework.beans.factory.annotation.Autowired;

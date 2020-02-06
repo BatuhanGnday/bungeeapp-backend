@@ -1,4 +1,4 @@
-package com.bungeeinc.bungeeapp.api.service.model.endpoint.users.register.response;
+package com.bungeeinc.bungeeapp.api.service.model.endpoint.user.register.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
