@@ -1,8 +1,8 @@
 package com.bungeeinc.bungeeapp.database.dao;
 
 import com.bungeeinc.bungeeapp.database.models.User;
-import org.jdbi.v3.sqlobject.config.RegisterBeanMapper;
 import org.jdbi.v3.sqlobject.config.RegisterColumnMapper;
+import org.jdbi.v3.sqlobject.customizer.Bind;
 import org.jdbi.v3.sqlobject.customizer.BindBean;
 import org.jdbi.v3.sqlobject.statement.GetGeneratedKeys;
 import org.jdbi.v3.sqlobject.statement.SqlQuery;
@@ -27,5 +27,14 @@ public interface IUserDao {
 
     @SqlQuery("select count(*) from user_accounts where username = :username or email = :email")
     boolean login(@BindBean User user);
+
+    @SqlQuery("select count(*) from user_followings where" +
+            " user_id = :userId and following_user_id = :followingUserId")
+    boolean isFollow(@Bind("userId") int userId, @Bind("followingUserId") int followingUserId);
+
+    @SqlUpdate("insert into user_followings(user_id, following_user_id)" +
+            " values (:userId, :followingUserId)")
+    void follow(@Bind("userId") int userId, @Bind("followingUserId") int followingUserId);
+
 
 }

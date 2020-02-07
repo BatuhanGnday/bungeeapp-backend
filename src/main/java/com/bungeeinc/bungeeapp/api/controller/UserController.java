@@ -1,6 +1,8 @@
 package com.bungeeinc.bungeeapp.api.controller;
 
 import com.bungeeinc.bungeeapp.api.service.UserService;
+import com.bungeeinc.bungeeapp.api.service.model.endpoint.user.follow.request.FollowRequest;
+import com.bungeeinc.bungeeapp.api.service.model.endpoint.user.follow.response.FollowResponse;
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.user.login.request.LoginRequest;
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.user.login.response.LoginResponse;
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.user.register.request.RegisterRequest;
@@ -34,9 +36,11 @@ public class UserController {
         return userService.auth(request);
     }
 
-    /*private void authenticate(String username, String password) throws Exception{
-        try {
-            auth
-        }
-    }*/
+    // TODO:
+    @PostMapping("/follow")
+    public FollowResponse follow(@RequestBody @Valid FollowRequest request) {
+        return userService.follow(request);
+    }
+
+
 }

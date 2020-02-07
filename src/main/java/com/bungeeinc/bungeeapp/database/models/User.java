@@ -38,28 +38,6 @@ public class User {
 
     private Timestamp createdOn;
 
-
-
-    /*public static class UserMapper implements RowMapper<User> {
-        @Override
-        public User map(ResultSet rs, StatementContext ctx) throws SQLException {
-            int id = rs.getInt("id");
-            String username = rs.getString("username");
-            String password = rs.getString("password");
-            String firstName = rs.getString("first_name");
-            String lastName = rs.getString("last_name");
-            String email = rs.getString("email");
-            int age = rs.getInt("age");
-            boolean isDeleted = rs.getBoolean("is_deleted");
-            String imageKey = rs.getString("image_key");
-            Timestamp createdOn = rs.getTimestamp("created_on");
-            User user = new User(username, password, firstName, lastName, email);
-            user.setId(id);
-            user.setCreatedOn(createdOn);
-            return user;
-        }
-    }*/
-
     public static class Mapper implements ColumnMapper<User> {
 
         @Override

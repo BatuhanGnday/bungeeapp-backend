@@ -1,6 +1,9 @@
 package com.bungeeinc.bungeeapp.api.service;
 
 import com.bungeeinc.bungeeapp.api.service.jwtconfig.JwtTokenUtil;
+import com.bungeeinc.bungeeapp.api.service.model.endpoint.user.follow.request.FollowRequest;
+import com.bungeeinc.bungeeapp.api.service.model.endpoint.user.follow.response.FollowResponse;
+import com.bungeeinc.bungeeapp.api.service.model.endpoint.user.follow.response.FollowResponseType;
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.user.login.request.LoginRequest;
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.user.login.response.LoginResponse;
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.user.login.response.LoginResponseType;
@@ -8,6 +11,7 @@ import com.bungeeinc.bungeeapp.api.service.model.endpoint.user.register.request.
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.user.register.response.RegisterResponse;
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.user.register.response.RegisterResponseType;
 import com.bungeeinc.bungeeapp.database.DatabaseService;
+import com.bungeeinc.bungeeapp.database.dao.IUserDao;
 import com.bungeeinc.bungeeapp.database.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,6 +36,14 @@ public class UserService {
         }
         return new LoginResponse(LoginResponseType.PASSWORD_FAIL,null);
     }
+
+    public FollowResponse follow(FollowRequest request) {
+        if(databaseService.getUserDao().isFollow(request.getUserId(), request.getFollowingUserId())){
+            return new FollowResponse(FollowResponseType.FAILED);
+        }
+        return new FollowResponse(FollowResponseType.SUCCESS);
+    }
+
     public RegisterResponse register(RegisterRequest request) {
         User user = new User(
                 request.getUsername(),
