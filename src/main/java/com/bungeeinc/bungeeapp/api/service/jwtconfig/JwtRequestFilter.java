@@ -5,6 +5,7 @@ import com.bungeeinc.bungeeapp.database.models.User;
 import io.jsonwebtoken.ExpiredJwtException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -20,7 +21,7 @@ import java.util.Collections;
 public class JwtRequestFilter extends OncePerRequestFilter {
 
     @Autowired
-    private UserService userService;
+    private JwtUserDetailsService jwtUserDetailsService;
 
     @Autowired
     private JwtTokenUtil tokenUtil;
@@ -36,6 +37,8 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
         if (requestTokenHeader != null && requestTokenHeader.startsWith("Bearer ")) {
             jwtToken = requestTokenHeader.substring(7);
+            System.out.println("debug tacticsss: \t" + jwtToken);
+            System.out.println("header: \t\t\t" + requestTokenHeader);
 
             try {
                 username = tokenUtil.getUsernameFromToken(jwtToken);
@@ -49,11 +52,11 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         }
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            User user = this.userService.getByUsername(username);
+            UserDetails userDetails = this.jwtUserDetailsService.loadUserByUsername(username);
 
-            if(tokenUtil.validateToken(jwtToken, user)) {
+            if(tokenUtil.validateToken(jwtToken, userDetails)) {
                 UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken
-                        = new UsernamePasswordAuthenticationToken(user, null, Collections.EMPTY_LIST);
+                        = new UsernamePasswordAuthenticationToken(userDetails, null, Collections.EMPTY_LIST);
 
                 usernamePasswordAuthenticationToken.setDetails(
                         new WebAuthenticationDetailsSource().buildDetails(httpServletRequest)

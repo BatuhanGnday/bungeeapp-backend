@@ -13,6 +13,7 @@ import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import io.jsonwebtoken.Jwts;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -68,7 +69,7 @@ public class JwtTokenUtil implements Serializable {
                 .compact();
     }
 
-    public boolean validateToken(String token, User user) {
+    public boolean validateToken(String token, UserDetails user) {
         final String username = getUsernameFromToken(token);
 
         return (username.equals(user.getUsername()) && isTokenExpired(token));
