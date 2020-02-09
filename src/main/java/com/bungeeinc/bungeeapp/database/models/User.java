@@ -3,8 +3,8 @@ package com.bungeeinc.bungeeapp.database.models;
 import lombok.Data;
 import lombok.NonNull;
 import org.jdbi.v3.core.mapper.ColumnMapper;
-import org.jdbi.v3.core.mapper.RowMapper;
 import org.jdbi.v3.core.statement.StatementContext;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;

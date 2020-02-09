@@ -11,7 +11,6 @@ import com.bungeeinc.bungeeapp.api.service.model.endpoint.user.register.request.
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.user.register.response.RegisterResponse;
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.user.register.response.RegisterResponseType;
 import com.bungeeinc.bungeeapp.database.DatabaseService;
-import com.bungeeinc.bungeeapp.database.dao.IUserDao;
 import com.bungeeinc.bungeeapp.database.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -41,6 +40,7 @@ public class UserService {
         if(databaseService.getUserDao().isFollow(request.getUserId(), request.getFollowingUserId())){
             return new FollowResponse(FollowResponseType.FAILED);
         }
+        databaseService.getUserDao().follow(request.getUserId(),request.getFollowingUserId());
         return new FollowResponse(FollowResponseType.SUCCESS);
     }
 
