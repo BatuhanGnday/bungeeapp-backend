@@ -7,10 +7,6 @@ import lombok.NonNull;
 @NoArgsConstructor
 @Getter
 public class FollowRequest {
-
-    @NonNull
-    private int userId;
-
     @NonNull
     private int followingUserId;
 }

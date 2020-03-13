@@ -1,6 +1,7 @@
 package com.bungeeinc.bungeeapp.database.dao;
 
-import com.bungeeinc.bungeeapp.database.models.User;
+import com.bungeeinc.bungeeapp.database.models.user.User;
+import com.bungeeinc.bungeeapp.database.models.user.UserRole;
 import org.jdbi.v3.sqlobject.config.RegisterColumnMapper;
 import org.jdbi.v3.sqlobject.customizer.Bind;
 import org.jdbi.v3.sqlobject.customizer.BindBean;
@@ -20,7 +21,12 @@ public interface IUserDao {
 
     @SqlQuery("select * from user_accounts where username = ?")
     @RegisterColumnMapper(User.Mapper.class)
-    User getByUsername(String username);
+    User findByUsername(String username);
+
+    // User -> UserDetails
+    @SqlQuery("select * from user_accounts where id = ?")
+    @RegisterColumnMapper(User.Mapper.class)
+    User getById(int id);
 
     @SqlQuery("select count(*) from user_accounts where username = ?")
     boolean isExistByUsername(String username);
@@ -35,6 +41,9 @@ public interface IUserDao {
     @SqlUpdate("insert into user_followings(user_id, following_user_id)" +
             " values (:userId, :followingUserId)")
     void follow(@Bind("userId") int userId, @Bind("followingUserId") int followingUserId);
+
+    @SqlQuery("select role from user_accounts where id = ?")
+    UserRole getRole(int id);
 
 
 }

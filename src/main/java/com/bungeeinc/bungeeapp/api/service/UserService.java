@@ -11,43 +11,68 @@ import com.bungeeinc.bungeeapp.api.service.model.endpoint.user.register.request.
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.user.register.response.RegisterResponse;
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.user.register.response.RegisterResponseType;
 import com.bungeeinc.bungeeapp.database.DatabaseService;
-import com.bungeeinc.bungeeapp.database.models.User;
+import com.bungeeinc.bungeeapp.database.models.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import javax.servlet.http.HttpServletRequest;
 
 @Service
 public class UserService {
 
     private final DatabaseService databaseService;
     private JwtTokenUtil tokenUtil;
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
+    private HttpServletRequest servletRequest;
 
     @Autowired
-    public UserService(DatabaseService databaseService) {
+    public UserService(DatabaseService databaseService, HttpServletRequest servletRequest) {
         this.databaseService = databaseService;
+        this.servletRequest = servletRequest;
+        this.bCryptPasswordEncoder = new BCryptPasswordEncoder();
         this.tokenUtil = new JwtTokenUtil();
     }
 
-    public LoginResponse auth(LoginRequest request) {
-        User user = databaseService.getUserDao().getByUsername(request.getUsername());
+        public LoginResponse auth(LoginRequest request) {
+            User user = databaseService.getUserDao().findByUsername(request.getUsername());
 
-        if(request.getPassword().equals(user.getPassword())){
-            return new LoginResponse(LoginResponseType.SUCCESS, tokenUtil.generateToken(user));
+            if (user == null) {
+                return new LoginResponse(LoginResponseType.USER_NOT_EXIST, null);
+            }
+            if(bCryptPasswordEncoder.matches(request.getPassword(), user.getPassword())){
+
+                    return new LoginResponse(LoginResponseType.SUCCESS, tokenUtil.generateToken(user));
+            }
+            return new LoginResponse(LoginResponseType.PASSWORD_FAIL,null);
         }
-        return new LoginResponse(LoginResponseType.PASSWORD_FAIL,null);
-    }
 
     public FollowResponse follow(FollowRequest request) {
-        if(databaseService.getUserDao().isFollow(request.getUserId(), request.getFollowingUserId())){
+
+        String username = tokenUtil.getUsernameFromToken(servletRequest.getHeader("Authorization"));
+        User user = databaseService.getUserDao().findByUsername(username);
+
+        if(!tokenUtil.validateToken(servletRequest.getHeader("Authorization"), user)) {
             return new FollowResponse(FollowResponseType.FAILED);
+        } else {
+            databaseService.getUserDao().follow(user.getId(), request.getFollowingUserId());
+            return new FollowResponse(FollowResponseType.SUCCESS);
+        }
+        /*User user = databaseService.getUserDao().getById(request.getUserId());
+        String token = tokenUtil.generateToken(user);
+
+        if(!databaseService.getUserDao().isFollow(request.getUserId(), request.getFollowingUserId())
+                && tokenUtil.validateToken(token, user)){
+            return new FollowResponse(FollowResponseType.SUCCESS);
         }
         databaseService.getUserDao().follow(request.getUserId(),request.getFollowingUserId());
-        return new FollowResponse(FollowResponseType.SUCCESS);
+        return new FollowResponse(FollowResponseType.SUCCESS);*/
     }
 
     public RegisterResponse register(RegisterRequest request) {
         User user = new User(
                 request.getUsername(),
-                request.getPassword(),
+                bCryptPasswordEncoder.encode(request.getPassword()),
                 request.getFirstName(),
                 request.getLastName(),
                 request.getEmail()
@@ -62,6 +87,12 @@ public class UserService {
     }
 
     public User getByUsername(String username) {
-        return this.databaseService.getUserDao().getByUsername(username);
+        return this.databaseService.getUserDao().findByUsername(username);
     }
+
+
+    public User getById(int id) {
+        return this.databaseService.getUserDao().getById(id);
+    }
+
 }

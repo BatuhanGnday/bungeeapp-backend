@@ -1,7 +1,6 @@
 package com.bungeeinc.bungeeapp.database.dao;
 
 import com.bungeeinc.bungeeapp.database.models.Post;
-import com.bungeeinc.bungeeapp.database.models.User;
 import org.jdbi.v3.sqlobject.customizer.Bind;
 import org.jdbi.v3.sqlobject.customizer.BindBean;
 import org.jdbi.v3.sqlobject.statement.GetGeneratedKeys;

@@ -1,7 +1,5 @@
 package com.bungeeinc.bungeeapp.api.service.jwtconfig;
 
-import com.bungeeinc.bungeeapp.api.service.UserService;
-import com.bungeeinc.bungeeapp.database.models.User;
 import io.jsonwebtoken.ExpiredJwtException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -42,7 +40,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                 username = tokenUtil.getUsernameFromToken(jwtToken);
             } catch (IllegalArgumentException e) {
                 System.out.println("Unable to get JWT Token");
-            } catch (ExpiredJwtException e) {
+            } catch(ExpiredJwtException e) {
                 System.out.println("JWT Token has expired");
             }
         } else {
