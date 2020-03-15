@@ -24,6 +24,8 @@ public class UserService {
     private final DatabaseService databaseService;
     private JwtTokenUtil tokenUtil;
     private BCryptPasswordEncoder bCryptPasswordEncoder;
+
+    @Autowired
     private HttpServletRequest servletRequest;
 
     @Autowired
@@ -47,12 +49,15 @@ public class UserService {
             return new LoginResponse(LoginResponseType.PASSWORD_FAIL,null);
         }
 
-    public FollowResponse follow(FollowRequest request) {
+    public FollowResponse follow(String token, FollowRequest request) {
 
-        String username = tokenUtil.getUsernameFromToken(servletRequest.getHeader("Authorization"));
+        System.out.println("ehbaba:" + token);
+        String jwtToken = token.substring(7);
+        String username = tokenUtil.getUsernameFromToken(jwtToken);
+        System.out.println(username);
         User user = databaseService.getUserDao().findByUsername(username);
 
-        if(!tokenUtil.validateToken(servletRequest.getHeader("Authorization"), user)) {
+        if(!tokenUtil.validateToken(jwtToken, user)) {
             return new FollowResponse(FollowResponseType.FAILED);
         } else {
             databaseService.getUserDao().follow(user.getId(), request.getFollowingUserId());

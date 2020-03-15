@@ -29,12 +29,11 @@ public class JwtUserDetailsService implements UserDetailsService {
         } else {
             return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), Collections.emptyList());
         }
-/*        Optional<User> user = Optional.ofNullable(userService.getByUsername(s));
+
+        /*        Optional<User> user = Optional.ofNullable(userService.getByUsername(s));
 
         user.orElseThrow(() -> new UsernameNotFoundException("Not found: " + s));
         return user.map(BungeeUserDetails::new).get();*/
-
-
         //return user.map(User::new).get();
         /*BungeeUserDetails user = userService.getUserDetailsByUsername(s);
         if(user == null) {

@@ -46,8 +46,8 @@ public class UserController {
 
     // TODO:
     @PostMapping("/follow")
-    public FollowResponse follow(@RequestBody @Valid FollowRequest request) {
-        return userService.follow(request);
+    public FollowResponse follow(@RequestHeader("Authorization")String token, @RequestBody @Valid FollowRequest request) {
+        return userService.follow(token, request);
     }
 
 }
