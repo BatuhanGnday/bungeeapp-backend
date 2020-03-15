@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -58,13 +59,11 @@ public class JwtTokenUtil implements Serializable {
     }
 
     private Claims getAllClaimsFromToken(String token) {
-/*        String raw = new String(token.getBytes());
-        String encoded = raw.replace("_", "+").replace("-", "/");
-        String decoded = String.valueOf(Base64.getDecoder().decode(encoded));*/
-
+        //Jws<Claims> claimsJws = Jwts.parser().setSigningKey(se)
+        System.out.println(token);
         return Jwts.parser()
-                .setSigningKey(secret)
-                .parseClaimsJws(token) // token yerine decoded'ı vermiştim
+                .setSigningKey(getSigningKey()) //base64 encoded vers. of secret key
+                .parseClaimsJws(token)
                 .getBody();
     }
 

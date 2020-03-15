@@ -15,13 +15,10 @@ public class DatabaseService {
 
     @Bean
     private Jdbi jdbi() throws Exception {
-        Jdbi jdbi = Jdbi.create("jdbc:mysql://localhost:3306/bungeeappdb?useSSL=false", "root", "roottoor");
+        Jdbi jdbi = Jdbi.create("jdbc:mysql://localhost:3306/bungeeappdb?useSSL=false", "root", "Batu.1128");
         jdbi.installPlugin(new SqlObjectPlugin());
         this.userDao = jdbi.onDemand(IUserDao.class);
         return jdbi;
     }
-
-
-
 
 }

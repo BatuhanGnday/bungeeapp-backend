@@ -25,35 +25,42 @@ public class UserService {
     private JwtTokenUtil tokenUtil;
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    @Autowired
-    private HttpServletRequest servletRequest;
 
     @Autowired
     public UserService(DatabaseService databaseService, HttpServletRequest servletRequest) {
         this.databaseService = databaseService;
-        this.servletRequest = servletRequest;
         this.bCryptPasswordEncoder = new BCryptPasswordEncoder();
         this.tokenUtil = new JwtTokenUtil();
     }
 
-        public LoginResponse auth(LoginRequest request) {
-            User user = databaseService.getUserDao().findByUsername(request.getUsername());
-
-            if (user == null) {
-                return new LoginResponse(LoginResponseType.USER_NOT_EXIST, null);
-            }
-            if(bCryptPasswordEncoder.matches(request.getPassword(), user.getPassword())){
-
-                    return new LoginResponse(LoginResponseType.SUCCESS, tokenUtil.generateToken(user));
-            }
-            return new LoginResponse(LoginResponseType.PASSWORD_FAIL,null);
+    /**
+     *
+     * @param request LoginRequest
+     * @return login response with a token if success
+     */
+    public LoginResponse auth(LoginRequest request) {
+        User user = databaseService.getUserDao().findByUsername(request.getUsername());
+        if (user == null) {
+            return new LoginResponse(LoginResponseType.USER_NOT_EXIST, null);
         }
+        if(bCryptPasswordEncoder.matches(request.getPassword(), user.getPassword())){
+            return new LoginResponse(LoginResponseType.SUCCESS, tokenUtil.generateToken(user));
+        }
+        return new LoginResponse(LoginResponseType.PASSWORD_FAIL,null);
+    }
 
-    public FollowResponse follow(String token, FollowRequest request) {
-
-        String jwtToken = token.substring(7);
+    /**
+     *
+     * @param req HttpServletRequest
+     * @param request FollowRequest
+     * @return follow type response
+     */
+    public FollowResponse follow(FollowRequest request, HttpServletRequest req) {
+        String jwtToken = req.getHeader("Authorization");
         String username = tokenUtil.getUsernameFromToken(jwtToken);
         User user = databaseService.getUserDao().findByUsername(username);
+        System.out.println("HttpServletRequest token: " + req.getHeader("Authorization"));
+        System.out.println("HttpServletRequest auth type: " + req.getAuthType());
 
         if (databaseService.getUserDao().isFollow(user.getId(), request.getFollowingUserId())) {
             return new FollowResponse(FollowResponseType.FAILED);
@@ -64,17 +71,13 @@ public class UserService {
             databaseService.getUserDao().follow(user.getId(), request.getFollowingUserId());
             return new FollowResponse(FollowResponseType.SUCCESS);
         }
-        /*User user = databaseService.getUserDao().getById(request.getUserId());
-        String token = tokenUtil.generateToken(user);
-
-        if(!databaseService.getUserDao().isFollow(request.getUserId(), request.getFollowingUserId())
-                && tokenUtil.validateToken(token, user)){
-            return new FollowResponse(FollowResponseType.SUCCESS);
-        }
-        databaseService.getUserDao().follow(request.getUserId(),request.getFollowingUserId());
-        return new FollowResponse(FollowResponseType.SUCCESS);*/
     }
 
+    /**
+     *
+     * @param request RegisterRequest
+     * @return RegisterResponse
+     */
     public RegisterResponse register(RegisterRequest request) {
         User user = new User(
                 request.getUsername(),
@@ -83,6 +86,7 @@ public class UserService {
                 request.getLastName(),
                 request.getEmail()
         );
+
         if (this.databaseService.getUserDao().isExistByUsernameOrEmail(user)) {
             return new RegisterResponse(RegisterResponseType.USERNAME_OR_EMAIL_EXISTS);
         }

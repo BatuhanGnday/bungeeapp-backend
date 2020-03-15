@@ -10,6 +10,7 @@ import com.bungeeinc.bungeeapp.api.service.model.endpoint.user.register.response
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import javax.websocket.server.PathParam;
 
@@ -18,6 +19,9 @@ import javax.websocket.server.PathParam;
 public class UserController {
 
     private final UserService userService;
+
+    @Autowired
+    private HttpServletRequest servletRequest;
 
     @Autowired
     public UserController(UserService userService) {
@@ -46,8 +50,8 @@ public class UserController {
 
     // TODO:
     @PostMapping("/follow")
-    public FollowResponse follow(@RequestHeader("Authorization")String token, @RequestBody @Valid FollowRequest request) {
-        return userService.follow(token, request);
+    public FollowResponse follow(@RequestBody @Valid FollowRequest request) {
+        return userService.follow(request, servletRequest);
     }
 
 }
