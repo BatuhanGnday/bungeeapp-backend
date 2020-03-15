@@ -51,12 +51,13 @@ public class UserService {
 
     public FollowResponse follow(String token, FollowRequest request) {
 
-        System.out.println("ehbaba:" + token);
         String jwtToken = token.substring(7);
         String username = tokenUtil.getUsernameFromToken(jwtToken);
-        System.out.println(username);
         User user = databaseService.getUserDao().findByUsername(username);
 
+        if (databaseService.getUserDao().isFollow(user.getId(), request.getFollowingUserId())) {
+            return new FollowResponse(FollowResponseType.FAILED);
+        }
         if(!tokenUtil.validateToken(jwtToken, user)) {
             return new FollowResponse(FollowResponseType.FAILED);
         } else {
