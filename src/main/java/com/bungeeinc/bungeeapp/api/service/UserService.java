@@ -56,11 +56,12 @@ public class UserService {
      * @return follow type response
      */
     public FollowResponse follow(FollowRequest request, HttpServletRequest req) {
-        String jwtToken = req.getHeader("Authorization");
+        String jwtToken = req.getHeader("Authorization").substring(7);
         String username = tokenUtil.getUsernameFromToken(jwtToken);
         User user = databaseService.getUserDao().findByUsername(username);
         System.out.println("HttpServletRequest token: " + req.getHeader("Authorization"));
         System.out.println("HttpServletRequest auth type: " + req.getAuthType());
+
 
         if (databaseService.getUserDao().isFollow(user.getId(), request.getFollowingUserId())) {
             return new FollowResponse(FollowResponseType.FAILED);
