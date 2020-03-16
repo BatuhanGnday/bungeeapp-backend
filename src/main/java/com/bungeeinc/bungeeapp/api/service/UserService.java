@@ -1,5 +1,6 @@
 package com.bungeeinc.bungeeapp.api.service;
 
+import com.bungeeinc.bungeeapp.api.annotation.ActiveUser;
 import com.bungeeinc.bungeeapp.api.service.jwtconfig.JwtTokenUtil;
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.user.follow.request.FollowRequest;
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.user.follow.response.FollowResponse;
@@ -104,10 +105,12 @@ public class UserService {
         return this.databaseService.getUserDao().getById(id);
     }
 
-    public ProfileResponse getProfile(int id) {
+    public ProfileResponse getProfile(int id, @ActiveUser User user) {
 
-        UsernamePasswordAuthenticationToken token = ((UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication());
-        User user = (User)token.getPrincipal();
+        //UsernamePasswordAuthenticationToken token = ((UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication());
+        //User user = (User)token.getPrincipal();
+
+        System.out.println(user.getFirstName() + "ananananskmkmk");
         User viewedUser = databaseService.getUserDao().getById(id);
         int numberOfFollowing = databaseService.getUserDao().numberOfFollowers(id);
         String biography = "Superbus solitudo foris attrahendams galatae est. " +

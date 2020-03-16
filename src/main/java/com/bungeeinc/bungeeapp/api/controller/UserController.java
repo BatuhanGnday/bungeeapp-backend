@@ -1,5 +1,6 @@
 package com.bungeeinc.bungeeapp.api.controller;
 
+import com.bungeeinc.bungeeapp.api.annotation.ActiveUser;
 import com.bungeeinc.bungeeapp.api.service.UserService;
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.user.follow.request.FollowRequest;
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.user.follow.response.FollowResponse;
@@ -8,6 +9,7 @@ import com.bungeeinc.bungeeapp.api.service.model.endpoint.user.login.response.Lo
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.user.profile.response.ProfileResponse;
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.user.register.request.RegisterRequest;
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.user.register.response.RegisterResponse;
+import com.bungeeinc.bungeeapp.database.models.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
@@ -34,8 +36,8 @@ public class UserController {
     }
 
     @GetMapping("{id}")
-    public ProfileResponse profileResponse(@PathVariable int id) {
-        return userService.getProfile(id);
+    public ProfileResponse profileResponse(@PathVariable int id, @ActiveUser User user) {
+        return userService.getProfile(id, user);
     }
 
     // TODO:
