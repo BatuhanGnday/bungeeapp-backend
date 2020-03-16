@@ -7,16 +7,22 @@ import com.bungeeinc.bungeeapp.api.service.model.endpoint.user.follow.response.F
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.user.login.request.LoginRequest;
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.user.login.response.LoginResponse;
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.user.login.response.LoginResponseType;
+import com.bungeeinc.bungeeapp.api.service.model.endpoint.user.profile.response.ProfileResponse;
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.user.register.request.RegisterRequest;
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.user.register.response.RegisterResponse;
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.user.register.response.RegisterResponseType;
 import com.bungeeinc.bungeeapp.database.DatabaseService;
+import com.bungeeinc.bungeeapp.database.models.Post;
 import com.bungeeinc.bungeeapp.database.models.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.LinkedList;
+import java.util.List;
 
 @Service
 public class UserService {
@@ -51,27 +57,19 @@ public class UserService {
 
     /**
      *
-     * @param req HttpServletRequest
      * @param request FollowRequest
      * @return follow type response
      */
-    public FollowResponse follow(FollowRequest request, HttpServletRequest req) {
-        String jwtToken = req.getHeader("Authorization").substring(7);
-        String username = tokenUtil.getUsernameFromToken(jwtToken);
-        User user = databaseService.getUserDao().findByUsername(username);
-        System.out.println("HttpServletRequest token: " + req.getHeader("Authorization"));
-        System.out.println("HttpServletRequest auth type: " + req.getAuthType());
+    public FollowResponse follow(FollowRequest request) {
 
+        UsernamePasswordAuthenticationToken token = ((UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication());
+        User user = (User)token.getPrincipal();
 
         if (databaseService.getUserDao().isFollow(user.getId(), request.getFollowingUserId())) {
             return new FollowResponse(FollowResponseType.FAILED);
         }
-        if(!tokenUtil.validateToken(jwtToken, user)) {
-            return new FollowResponse(FollowResponseType.FAILED);
-        } else {
-            databaseService.getUserDao().follow(user.getId(), request.getFollowingUserId());
-            return new FollowResponse(FollowResponseType.SUCCESS);
-        }
+        databaseService.getUserDao().follow(user.getId(), request.getFollowingUserId());
+        return new FollowResponse(FollowResponseType.SUCCESS);
     }
 
     /**
@@ -106,4 +104,28 @@ public class UserService {
         return this.databaseService.getUserDao().getById(id);
     }
 
+    public ProfileResponse getProfile(int id) {
+        User user = getById(id);
+
+        int numberOfFollowing = databaseService.getUserDao().numberOfFollowers(id);
+        String biography = "Superbus solitudo foris attrahendams galatae est. " +
+                "Flavum, primus parss cito desiderium de nobilis, fatalis bromium.";
+        boolean blocked_by_viewer = false;
+        boolean country_block = false;
+        int numberOfFollowed = databaseService.getUserDao().numberOfFollowed(id);
+        String fullName = user.getFirstName() + " " + user.getLastName();
+        boolean isJoinedRecently = false;
+        boolean isPrivate = false;
+        boolean isVerified = true;
+        String profilePicImageKey = "/bungee/profile/image.jpg";
+        String username = user.getUsername();
+        List<Post> featuredPosts = new LinkedList<>();
+
+        return new ProfileResponse(biography,
+                blocked_by_viewer,country_block,numberOfFollowing,numberOfFollowed,
+                fullName,id,isJoinedRecently,isPrivate,isVerified,profilePicImageKey,
+                username,featuredPosts);
+
+
+    }
 }

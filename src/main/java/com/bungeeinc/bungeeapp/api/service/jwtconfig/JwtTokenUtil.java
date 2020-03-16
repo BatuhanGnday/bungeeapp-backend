@@ -17,6 +17,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.Mac;
+import javax.servlet.http.HttpServletRequest;
 
 @Component
 public class JwtTokenUtil implements Serializable {

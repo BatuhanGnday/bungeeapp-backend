@@ -5,23 +5,23 @@ import com.bungeeinc.bungeeapp.api.service.model.endpoint.user.follow.request.Fo
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.user.follow.response.FollowResponse;
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.user.login.request.LoginRequest;
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.user.login.response.LoginResponse;
+import com.bungeeinc.bungeeapp.api.service.model.endpoint.user.profile.response.ProfileResponse;
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.user.register.request.RegisterRequest;
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.user.register.response.RegisterResponse;
+import com.bungeeinc.bungeeapp.database.models.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import javax.websocket.server.PathParam;
+import java.lang.annotation.*;
 
 @RestController
 @RequestMapping("/users")
 public class UserController {
 
     private final UserService userService;
-
-    @Autowired
-    private HttpServletRequest servletRequest;
 
     @Autowired
     public UserController(UserService userService) {
@@ -43,15 +43,21 @@ public class UserController {
 
     }*/
 
+    @GetMapping("{id}")
+    public ProfileResponse profileResponse(@PathVariable int id) {
+        return userService.getProfile(id);
+    }
+
 /*    @GetMapping("{profileId}")
     public ProfileResponse profileResponse(@PathVariable String profileId) {
 
     }*/
 
+
     // TODO:
     @PostMapping("/follow")
     public FollowResponse follow(@RequestBody @Valid FollowRequest request) {
-        return userService.follow(request, servletRequest);
+        return userService.follow(request);
     }
 
 }

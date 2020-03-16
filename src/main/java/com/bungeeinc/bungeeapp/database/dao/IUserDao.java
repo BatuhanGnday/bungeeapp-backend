@@ -45,5 +45,12 @@ public interface IUserDao {
     @SqlQuery("select role from user_accounts where id = ?")
     UserRole getRole(int id);
 
+    @SqlQuery("select count(*) from user_followings where " +
+            "following_user_id = ?")
+    int numberOfFollowers(int id);
+
+    @SqlQuery("select count(*) from user_followings where " +
+            "user_id = ?")
+    int numberOfFollowed(int id);
 
 }
