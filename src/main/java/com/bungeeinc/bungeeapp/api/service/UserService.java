@@ -105,8 +105,10 @@ public class UserService {
     }
 
     public ProfileResponse getProfile(int id) {
-        User user = getById(id);
 
+        UsernamePasswordAuthenticationToken token = ((UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication());
+        User user = (User)token.getPrincipal();
+        User viewedUser = databaseService.getUserDao().getById(id);
         int numberOfFollowing = databaseService.getUserDao().numberOfFollowers(id);
         String biography = "Superbus solitudo foris attrahendams galatae est. " +
                 "Flavum, primus parss cito desiderium de nobilis, fatalis bromium.";

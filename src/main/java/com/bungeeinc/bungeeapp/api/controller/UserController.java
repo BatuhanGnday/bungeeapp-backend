@@ -8,14 +8,9 @@ import com.bungeeinc.bungeeapp.api.service.model.endpoint.user.login.response.Lo
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.user.profile.response.ProfileResponse;
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.user.register.request.RegisterRequest;
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.user.register.response.RegisterResponse;
-import com.bungeeinc.bungeeapp.database.models.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import javax.websocket.server.PathParam;
-import java.lang.annotation.*;
 
 @RestController
 @RequestMapping("/users")
@@ -38,21 +33,10 @@ public class UserController {
         return userService.auth(request);
     }
 
-/*    @GetMapping("{profileId}")
-    public ProfileResponse getProfile(@PathVariable("profileId")String username) {
-
-    }*/
-
     @GetMapping("{id}")
     public ProfileResponse profileResponse(@PathVariable int id) {
         return userService.getProfile(id);
     }
-
-/*    @GetMapping("{profileId}")
-    public ProfileResponse profileResponse(@PathVariable String profileId) {
-
-    }*/
-
 
     // TODO:
     @PostMapping("/follow")
