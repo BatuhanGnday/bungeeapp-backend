@@ -11,9 +11,10 @@ import java.util.List;
 public class ProfileResponse {
 
     private String biography;
-    private boolean blocked_by_viewer;
-    private boolean country_block;
+    private boolean blockedByViewer;
+    private boolean countryBlock;
     private int followCount;
+    private boolean isFollowed;
     private int followedByCount;
     private String fullName;
     private int id;

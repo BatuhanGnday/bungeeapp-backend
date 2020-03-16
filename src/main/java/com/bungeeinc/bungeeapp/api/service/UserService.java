@@ -1,6 +1,6 @@
 package com.bungeeinc.bungeeapp.api.service;
 
-import com.bungeeinc.bungeeapp.api.annotation.ActiveUser;
+import com.bungeeinc.bungeeapp.api.annotation.activeuser.ActiveUser;
 import com.bungeeinc.bungeeapp.api.service.jwtconfig.JwtTokenUtil;
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.user.follow.request.FollowRequest;
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.user.follow.response.FollowResponse;
@@ -22,6 +22,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -34,7 +36,7 @@ public class UserService {
 
 
     @Autowired
-    public UserService(DatabaseService databaseService, HttpServletRequest servletRequest) {
+    public UserService(DatabaseService databaseService) {
         this.databaseService = databaseService;
         this.bCryptPasswordEncoder = new BCryptPasswordEncoder();
         this.tokenUtil = new JwtTokenUtil();
@@ -105,21 +107,36 @@ public class UserService {
         return this.databaseService.getUserDao().getById(id);
     }
 
+
     public ProfileResponse getProfile(int id, @ActiveUser User user) {
 
-        //UsernamePasswordAuthenticationToken token = ((UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication());
-        //User user = (User)token.getPrincipal();
-
-        System.out.println(user.getFirstName() + "ananananskmkmk");
         User viewedUser = databaseService.getUserDao().getById(id);
+
         int numberOfFollowing = databaseService.getUserDao().numberOfFollowers(id);
-        String biography = "Superbus solitudo foris attrahendams galatae est. " +
-                "Flavum, primus parss cito desiderium de nobilis, fatalis bromium.";
+        String biography = databaseService.getUserDao().getBiography(id);
+        boolean isFollowed = databaseService.getUserDao().isFollow(user.getId(), viewedUser.getId());
         boolean blocked_by_viewer = false;
         boolean country_block = false;
         int numberOfFollowed = databaseService.getUserDao().numberOfFollowed(id);
-        String fullName = user.getFirstName() + " " + user.getLastName();
+        String fullName = viewedUser.getFirstName() + " " + viewedUser.getLastName();
+
         boolean isJoinedRecently = false;
+
+        Date currentTime = new Date();
+        Date createdOnDate = new Date(viewedUser.getCreatedOn().getTime());
+
+        long createdOnLong = createdOnDate.getTime();
+        long currentTimeLong = currentTime.getTime();
+
+        if (currentTimeLong - createdOnLong < 259000000L) {
+            isJoinedRecently = true;
+        }
+/*        Date createdOnDate = (Date)user.getCreatedOn();
+
+        System.out.println(createdOnDate.getTime());
+        long currentDate = new Date().getTime();*/
+
+
         boolean isPrivate = false;
         boolean isVerified = true;
         String profilePicImageKey = "/bungee/profile/image.jpg";
@@ -127,7 +144,7 @@ public class UserService {
         List<Post> featuredPosts = new LinkedList<>();
 
         return new ProfileResponse(biography,
-                blocked_by_viewer,country_block,numberOfFollowing,numberOfFollowed,
+                blocked_by_viewer,country_block,numberOfFollowing, isFollowed, numberOfFollowed,
                 fullName,id,isJoinedRecently,isPrivate,isVerified,profilePicImageKey,
                 username,featuredPosts);
 

@@ -1,6 +1,6 @@
 package com.bungeeinc.bungeeapp.api.controller;
 
-import com.bungeeinc.bungeeapp.api.annotation.ActiveUser;
+import com.bungeeinc.bungeeapp.api.annotation.activeuser.ActiveUser;
 import com.bungeeinc.bungeeapp.api.service.UserService;
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.user.follow.request.FollowRequest;
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.user.follow.response.FollowResponse;
@@ -45,5 +45,7 @@ public class UserController {
     public FollowResponse follow(@RequestBody @Valid FollowRequest request) {
         return userService.follow(request);
     }
+
+
 
 }

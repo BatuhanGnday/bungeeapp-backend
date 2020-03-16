@@ -1,10 +1,9 @@
-package com.bungeeinc.bungeeapp.api.annotation;
+package com.bungeeinc.bungeeapp.api.annotation.activeuser;
 
 import com.bungeeinc.bungeeapp.api.exception.FailedToGetUserFromSecurityContextException;
 import com.bungeeinc.bungeeapp.api.exception.UnsupportedAuthenticationTypeException;
 import com.bungeeinc.bungeeapp.database.models.user.User;
 import org.springframework.core.MethodParameter;
-import org.springframework.core.NestedRuntimeException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;

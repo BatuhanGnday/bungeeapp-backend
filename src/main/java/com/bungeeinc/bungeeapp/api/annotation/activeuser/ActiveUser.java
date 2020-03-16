@@ -1,4 +1,4 @@
-package com.bungeeinc.bungeeapp.api.annotation;
+package com.bungeeinc.bungeeapp.api.annotation.activeuser;
 
 import java.lang.annotation.*;
 

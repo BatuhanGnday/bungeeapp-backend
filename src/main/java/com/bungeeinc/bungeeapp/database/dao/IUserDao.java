@@ -53,4 +53,9 @@ public interface IUserDao {
             "user_id = ?")
     int numberOfFollowed(int id);
 
+    @SqlQuery("select biography from user_accounts where id = ?")
+    String getBiography(int id);
+
+
+
 }

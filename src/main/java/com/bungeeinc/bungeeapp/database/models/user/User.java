@@ -28,6 +28,8 @@ public class User implements UserDetails {
 
     private String role;
 
+    String biography;
+
     @NonNull
     private String firstName;
 
@@ -81,13 +83,16 @@ public class User implements UserDetails {
             String firstName = r.getString("first_name");
             String lastName = r.getString("last_name");
             String email = r.getString("email");
+            String biography = r.getString("biography");
             int age = r.getInt("age");
             boolean isDeleted = r.getBoolean("is_deleted");
             String imageKey = r.getString("image_key");
             Timestamp createdOn = r.getTimestamp("created_on");
             User user = new User(username, password, firstName, lastName, email);
             user.setId(id);
+            user.setRole(role);
             user.setCreatedOn(createdOn);
+            user.setBiography(biography);
             return user;
         }
     }
