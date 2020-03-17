@@ -5,15 +5,17 @@ import org.jdbi.v3.sqlobject.customizer.Bind;
 import org.jdbi.v3.sqlobject.customizer.BindBean;
 import org.jdbi.v3.sqlobject.statement.GetGeneratedKeys;
 import org.jdbi.v3.sqlobject.statement.SqlQuery;
+import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 
 import java.util.List;
 
 public interface IPostDao {
 
-    @SqlQuery("insert into posts (user_id, text, image_key)" +
-            " values (?, post:text, post:imageKey)")
+    @SqlUpdate("insert into posts (user_id, text, image_key)" +
+            " values (:userId, :text, :imageKey)")
     @GetGeneratedKeys
-    int createPost(int userId, @BindBean("post") Post post);
+    int createPost(@BindBean() Post post);
+
 
     @SqlQuery("select * from posts where user_id = :userId")
     List<Post> getByUserId(@Bind("userId") int userId);

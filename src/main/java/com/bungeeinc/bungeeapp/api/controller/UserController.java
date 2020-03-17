@@ -2,6 +2,8 @@ package com.bungeeinc.bungeeapp.api.controller;
 
 import com.bungeeinc.bungeeapp.api.annotation.activeuser.ActiveUser;
 import com.bungeeinc.bungeeapp.api.service.UserService;
+import com.bungeeinc.bungeeapp.api.service.model.endpoint.post.share.request.ShareRequest;
+import com.bungeeinc.bungeeapp.api.service.model.endpoint.post.share.response.ShareResponse;
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.user.follow.request.FollowRequest;
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.user.follow.response.FollowResponse;
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.user.login.request.LoginRequest;
@@ -35,7 +37,7 @@ public class UserController {
         return userService.auth(request);
     }
 
-    @GetMapping("{id}")
+    @GetMapping("/{id}")
     public ProfileResponse profileResponse(@PathVariable int id, @ActiveUser User user) {
         return userService.getProfile(id, user);
     }
@@ -46,6 +48,8 @@ public class UserController {
         return userService.follow(request);
     }
 
-
-
+    @PostMapping("/me/share")
+    public ShareResponse shareResponse(@RequestBody @Valid ShareRequest request, @ActiveUser User user){
+        return userService.share(user, request);
+    }
 }

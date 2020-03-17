@@ -1,7 +1,9 @@
 package com.bungeeinc.bungeeapp.database.models;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import org.jdbi.v3.core.mapper.ColumnMapper;
 import org.jdbi.v3.core.statement.StatementContext;
 
@@ -10,10 +12,12 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 
 @Data
+@AllArgsConstructor
 public class Post {
 
     private int id;
 
+    @NonNull
     private int userId;
 
     @NonNull
@@ -23,8 +27,13 @@ public class Post {
 
     private Timestamp sharedOn;
 
-    public static class Mapper implements ColumnMapper<Post> {
+    public Post(int userId, String text, String imageKey) {
+        this.userId = userId;
+        this.text = text;
+        this.imageKey = imageKey;
+    }
 
+    public static class Mapper implements ColumnMapper<Post> {
         @Override
         public Post map(ResultSet r, int columnNumber, StatementContext ctx) throws SQLException {
 
@@ -34,7 +43,7 @@ public class Post {
             String imageKey = r.getString("image_key");
             Timestamp sharedOn = r.getTimestamp("shared_on");
 
-            Post post = new Post(text);
+            Post post = new Post(userId, text, imageKey);
             post.setId(id);
             post.setSharedOn(sharedOn);
 

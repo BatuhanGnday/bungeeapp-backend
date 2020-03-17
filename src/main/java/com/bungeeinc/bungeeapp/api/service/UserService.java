@@ -2,6 +2,9 @@ package com.bungeeinc.bungeeapp.api.service;
 
 import com.bungeeinc.bungeeapp.api.annotation.activeuser.ActiveUser;
 import com.bungeeinc.bungeeapp.api.service.jwtconfig.JwtTokenUtil;
+import com.bungeeinc.bungeeapp.api.service.model.endpoint.post.share.request.ShareRequest;
+import com.bungeeinc.bungeeapp.api.service.model.endpoint.post.share.response.ShareResponse;
+import com.bungeeinc.bungeeapp.api.service.model.endpoint.post.share.response.ShareResponseType;
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.user.follow.request.FollowRequest;
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.user.follow.response.FollowResponse;
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.user.follow.response.FollowResponseType;
@@ -149,5 +152,10 @@ public class UserService {
                 username,featuredPosts);
 
 
+    }
+
+    public ShareResponse share(User user, ShareRequest request) {
+        databaseService.getPostDao().createPost(new Post(user.getId(),request.getText(), request.getImageKey()));
+        return new ShareResponse(ShareResponseType.SUCCESS);
     }
 }
