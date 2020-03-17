@@ -79,6 +79,7 @@ public class UserService {
     }
 
     /**
+     * Register a user
      *
      * @param request RegisterRequest
      * @return RegisterResponse
@@ -111,7 +112,7 @@ public class UserService {
     }
 
 
-    public ProfileResponse getProfile(int id, @ActiveUser User user) {
+    public ProfileResponse getProfile(User user, int id) {
 
         User viewedUser = databaseService.getUserDao().getById(id);
 
@@ -122,23 +123,20 @@ public class UserService {
         boolean country_block = false;
         int numberOfFollowed = databaseService.getUserDao().numberOfFollowed(id);
         String fullName = viewedUser.getFirstName() + " " + viewedUser.getLastName();
-
         boolean isJoinedRecently = false;
 
+        // Date object to find current time
         Date currentTime = new Date();
-        Date createdOnDate = new Date(viewedUser.getCreatedOn().getTime());
 
-        long createdOnLong = createdOnDate.getTime();
+        // Time values
+        long createdOnLong = viewedUser.getCreatedOn().getTime();
         long currentTimeLong = currentTime.getTime();
 
+        // Finds the difference between createdOn time and currentTime
+        // Checks if it's been 3 days
         if (currentTimeLong - createdOnLong < 259000000L) {
             isJoinedRecently = true;
         }
-/*        Date createdOnDate = (Date)user.getCreatedOn();
-
-        System.out.println(createdOnDate.getTime());
-        long currentDate = new Date().getTime();*/
-
 
         boolean isPrivate = false;
         boolean isVerified = true;
@@ -154,8 +152,5 @@ public class UserService {
 
     }
 
-    public ShareResponse share(User user, ShareRequest request) {
-        databaseService.getPostDao().createPost(new Post(user.getId(),request.getText(), request.getImageKey()));
-        return new ShareResponse(ShareResponseType.SUCCESS);
-    }
+
 }

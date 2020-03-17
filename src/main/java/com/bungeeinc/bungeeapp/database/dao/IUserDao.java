@@ -23,16 +23,9 @@ public interface IUserDao {
     @RegisterColumnMapper(User.Mapper.class)
     User findByUsername(String username);
 
-    // User -> UserDetails
     @SqlQuery("select * from user_accounts where id = ?")
     @RegisterColumnMapper(User.Mapper.class)
     User getById(int id);
-
-    @SqlQuery("select count(*) from user_accounts where username = ?")
-    boolean isExistByUsername(String username);
-
-    @SqlQuery("select count(*) from user_accounts where username = :username or email = :email")
-    boolean login(@BindBean User user);
 
     @SqlQuery("select count(*) from user_followings where" +
             " user_id = :userId and following_user_id = :followingUserId")

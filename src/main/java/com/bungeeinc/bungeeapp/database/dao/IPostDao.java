@@ -1,6 +1,7 @@
 package com.bungeeinc.bungeeapp.database.dao;
 
 import com.bungeeinc.bungeeapp.database.models.Post;
+import org.jdbi.v3.sqlobject.config.RegisterColumnMapper;
 import org.jdbi.v3.sqlobject.customizer.Bind;
 import org.jdbi.v3.sqlobject.customizer.BindBean;
 import org.jdbi.v3.sqlobject.statement.GetGeneratedKeys;
@@ -16,7 +17,7 @@ public interface IPostDao {
     @GetGeneratedKeys
     int createPost(@BindBean() Post post);
 
-
     @SqlQuery("select * from posts where user_id = :userId")
+    @RegisterColumnMapper(Post.Mapper.class)
     List<Post> getByUserId(@Bind("userId") int userId);
 }
