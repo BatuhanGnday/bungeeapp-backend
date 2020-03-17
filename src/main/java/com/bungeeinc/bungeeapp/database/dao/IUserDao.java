@@ -51,7 +51,7 @@ public interface IUserDao {
     @SqlQuery("select biography from user_accounts where id = ?")
     String getBiography(int id);
 
-    @SqlQuery("select * from user_accounts inner join user_followings on following_user_id = user_accounts.id and user_accounts.id = :id")
+    @SqlQuery("select * from user_accounts inner join user_followings on user_id = user_accounts.id and following_user_id = :id")
     @RegisterColumnMapper(User.Mapper.class)
     List<User> getFollowers(@Bind("id") int id);
 
