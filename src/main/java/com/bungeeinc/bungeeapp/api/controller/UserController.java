@@ -4,6 +4,7 @@ import com.bungeeinc.bungeeapp.api.annotation.activeuser.ActiveUser;
 import com.bungeeinc.bungeeapp.api.service.UserService;
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.user.follow.request.FollowRequest;
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.user.follow.response.FollowResponse;
+import com.bungeeinc.bungeeapp.api.service.model.endpoint.user.getfollowers.response.GetFollowersResponse;
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.user.login.request.LoginRequest;
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.user.login.response.LoginResponse;
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.user.profile.response.ProfileResponse;
@@ -15,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/user")
 public class UserController {
 
     private final UserService userService;
@@ -43,6 +44,11 @@ public class UserController {
     @PostMapping("/follow")
     public FollowResponse follow(@RequestBody @Valid FollowRequest request) {
         return userService.follow(request);
+    }
+
+    @GetMapping("/followers/{id}")
+    public GetFollowersResponse getFollowers(@PathVariable int id){
+        return userService.getFollowers(id);
     }
 
 }

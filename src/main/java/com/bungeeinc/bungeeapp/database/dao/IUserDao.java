@@ -9,6 +9,8 @@ import org.jdbi.v3.sqlobject.statement.GetGeneratedKeys;
 import org.jdbi.v3.sqlobject.statement.SqlQuery;
 import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 
+import java.util.List;
+
 public interface IUserDao {
 
     @SqlUpdate("insert into user_accounts(username, password, first_name, last_name, email)" +
@@ -48,6 +50,10 @@ public interface IUserDao {
 
     @SqlQuery("select biography from user_accounts where id = ?")
     String getBiography(int id);
+
+    @SqlQuery("select * from user_accounts inner join user_followings on following_user_id = user_accounts.id and user_accounts.id = :id")
+    @RegisterColumnMapper(User.Mapper.class)
+    List<User> getFollowers(@Bind("id") int id);
 
 
 

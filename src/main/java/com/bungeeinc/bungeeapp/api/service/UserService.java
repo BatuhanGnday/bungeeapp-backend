@@ -8,6 +8,8 @@ import com.bungeeinc.bungeeapp.api.service.model.endpoint.post.share.response.Sh
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.user.follow.request.FollowRequest;
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.user.follow.response.FollowResponse;
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.user.follow.response.FollowResponseType;
+import com.bungeeinc.bungeeapp.api.service.model.endpoint.user.getfollowers.response.GetFollowersResponse;
+import com.bungeeinc.bungeeapp.api.service.model.endpoint.user.getfollowers.response.GetFollowersResponseType;
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.user.login.request.LoginRequest;
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.user.login.response.LoginResponse;
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.user.login.response.LoginResponseType;
@@ -150,6 +152,10 @@ public class UserService {
                 username,featuredPosts);
 
 
+    }
+
+    public GetFollowersResponse getFollowers(int id) {
+        return new GetFollowersResponse(databaseService.getUserDao().getFollowers(id), GetFollowersResponseType.SUCCESSFUL);
     }
 
 
