@@ -33,9 +33,9 @@ public interface IUserDao {
             " user_id = :userId and following_user_id = :followingUserId")
     boolean isFollow(@Bind("userId") int userId, @Bind("followingUserId") int followingUserId);
 
-    @SqlUpdate("insert into user_followings(user_id, following_user_id)" +
-            " values (:userId, :followingUserId)")
-    void follow(@Bind("userId") int userId, @Bind("followingUserId") int followingUserId);
+    @SqlUpdate("insert into user_followings(user_id, following_user_id, request_accepted)" +
+            " values (:userId, :followingUserId, :accepted)")
+    void follow(@Bind("userId") int userId, @Bind("followingUserId") int followingUserId,@Bind("accepted") boolean isAccepted);
 
     @SqlQuery("select role from user_accounts where id = ?")
     UserRole getRole(int id);
@@ -54,6 +54,16 @@ public interface IUserDao {
     @SqlQuery("select * from user_accounts inner join user_followings on user_id = user_accounts.id and following_user_id = :id")
     @RegisterColumnMapper(User.Mapper.class)
     List<User> getFollowers(@Bind("id") int id);
+
+    @SqlUpdate("update user_accounts set username = :username, password = :password, role = :role, first_name = firstName," +
+            " last_name = :lastName, email = :email, biography = :biography, age = :age, is_deleted = isDeleted, " +
+            "image_key = :imageKey, created_on = :createdOn, private = :isPrivate where id = :id")
+    void updateUser(@BindBean User user);
+
+    @SqlQuery("select * from user_accounts inner join user_followings on user_id = user_accounts.id and " +
+            "following_user_id = :id and request_accepted = 0")
+    @RegisterColumnMapper(User.Mapper.class)
+    List<User> getFollowRequests(@Bind("id") int id);
 
 
 

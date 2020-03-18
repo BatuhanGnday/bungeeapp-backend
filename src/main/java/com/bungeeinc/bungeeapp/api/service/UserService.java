@@ -1,13 +1,10 @@
 package com.bungeeinc.bungeeapp.api.service;
 
-import com.bungeeinc.bungeeapp.api.annotation.activeuser.ActiveUser;
 import com.bungeeinc.bungeeapp.api.service.jwtconfig.JwtTokenUtil;
-import com.bungeeinc.bungeeapp.api.service.model.endpoint.post.share.request.ShareRequest;
-import com.bungeeinc.bungeeapp.api.service.model.endpoint.post.share.response.ShareResponse;
-import com.bungeeinc.bungeeapp.api.service.model.endpoint.post.share.response.ShareResponseType;
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.user.follow.request.FollowRequest;
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.user.follow.response.FollowResponse;
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.user.follow.response.FollowResponseType;
+import com.bungeeinc.bungeeapp.api.service.model.endpoint.user.followrequest.GetFollowRequestResponse;
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.user.getfollowers.response.FollowingUserResponseModel;
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.user.getfollowers.response.GetFollowersResponse;
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.user.getfollowers.response.GetFollowersResponseType;
@@ -22,13 +19,8 @@ import com.bungeeinc.bungeeapp.database.DatabaseService;
 import com.bungeeinc.bungeeapp.database.models.Post;
 import com.bungeeinc.bungeeapp.database.models.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import javax.servlet.http.HttpServletRequest;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
@@ -70,15 +62,21 @@ public class UserService {
      * @param request FollowRequest
      * @return follow type response
      */
-    public FollowResponse follow(FollowRequest request) {
+    public FollowResponse follow(FollowRequest request, User user) {
 
-        UsernamePasswordAuthenticationToken token = ((UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication());
-        User user = (User)token.getPrincipal();
+        // UsernamePasswordAuthenticationToken token = ((UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication());
+        // User user = (User)token.getPrincipal();
+
+        User followingUser = databaseService.getUserDao().getById(request.getFollowingUserId());
 
         if (databaseService.getUserDao().isFollow(user.getId(), request.getFollowingUserId())) {
             return new FollowResponse(FollowResponseType.FAILED);
         }
-        databaseService.getUserDao().follow(user.getId(), request.getFollowingUserId());
+        if (databaseService.getUserDao().getById(request.getFollowingUserId()).isPrivate()) {
+            databaseService.getUserDao().follow(user.getId(), followingUser.getId(), false);
+            return new FollowResponse(FollowResponseType.SUCCESS);
+        }
+        databaseService.getUserDao().follow(user.getId(), request.getFollowingUserId(), true);
         return new FollowResponse(FollowResponseType.SUCCESS);
     }
 
@@ -172,5 +170,20 @@ public class UserService {
         return new GetFollowersResponse(responseModelList, GetFollowersResponseType.SUCCESSFUL);
     }
 
+    public GetFollowRequestResponse getFollowRequests(User user) {
+        List<User> requestList = new ArrayList<>(databaseService.getUserDao().getFollowRequests(user.getId()));
+        List<FollowingUserResponseModel> followingUserResponseModels = new ArrayList<>();
+
+        for (User user1 : requestList) {
+            int userId = user1.getId();
+            String username = user1.getUsername();
+            String fullName = user1.getFirstName() + " " + user1.getLastName();
+            String imageKey = user1.getImageKey();
+            boolean isFollowedByActiveUser = databaseService.getUserDao().isFollow(user.getId(), user1.getId());
+            followingUserResponseModels.add(new FollowingUserResponseModel(userId,
+                    username, fullName, imageKey, isFollowedByActiveUser));
+        }
+        return new GetFollowRequestResponse(followingUserResponseModels);
+    }
 
 }

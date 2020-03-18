@@ -1,13 +1,11 @@
 package com.bungeeinc.bungeeapp.database.models.user;
 
-import lombok.Builder;
 import lombok.Data;
 import lombok.NonNull;
 import org.jdbi.v3.core.mapper.ColumnMapper;
 import org.jdbi.v3.core.statement.StatementContext;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
@@ -91,6 +89,7 @@ public class User implements UserDetails {
             boolean isDeleted = r.getBoolean("is_deleted");
             String imageKey = r.getString("image_key");
             Timestamp createdOn = r.getTimestamp("created_on");
+            boolean isPrivate = r.getBoolean("private");
             User user = new User(username, password, firstName, lastName, email);
             user.setId(id);
             user.setRole(role);
@@ -99,6 +98,7 @@ public class User implements UserDetails {
             user.setImageKey(imageKey);
             user.setAge(age);
             user.setDeleted(isDeleted);
+            user.setPrivate(isPrivate);
             return user;
         }
     }
