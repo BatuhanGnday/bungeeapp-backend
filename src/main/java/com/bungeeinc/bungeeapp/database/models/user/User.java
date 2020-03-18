@@ -28,7 +28,10 @@ public class User implements UserDetails {
 
     private String role;
 
-    String biography;
+    private String biography;
+
+    @NonNull
+    private boolean isPrivate = false;
 
     @NonNull
     private String firstName;
@@ -93,6 +96,9 @@ public class User implements UserDetails {
             user.setRole(role);
             user.setCreatedOn(createdOn);
             user.setBiography(biography);
+            user.setImageKey(imageKey);
+            user.setAge(age);
+            user.setDeleted(isDeleted);
             return user;
         }
     }

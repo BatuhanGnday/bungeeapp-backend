@@ -8,6 +8,7 @@ import com.bungeeinc.bungeeapp.api.service.model.endpoint.post.share.response.Sh
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.user.follow.request.FollowRequest;
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.user.follow.response.FollowResponse;
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.user.follow.response.FollowResponseType;
+import com.bungeeinc.bungeeapp.api.service.model.endpoint.user.getfollowers.response.FollowingUserResponseModel;
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.user.getfollowers.response.GetFollowersResponse;
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.user.getfollowers.response.GetFollowersResponseType;
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.user.login.request.LoginRequest;
@@ -28,6 +29,7 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -154,8 +156,20 @@ public class UserService {
 
     }
 
-    public GetFollowersResponse getFollowers(int id) {
-        return new GetFollowersResponse(databaseService.getUserDao().getFollowers(id), GetFollowersResponseType.SUCCESSFUL);
+    public GetFollowersResponse getFollowers(User activeUser, int id) {
+        List<User> userList = databaseService.getUserDao().getFollowers(id);
+        List<FollowingUserResponseModel> responseModelList = new ArrayList<>();
+
+        for (User user : userList) {
+            int userId = user.getId();
+            String username = user.getUsername();
+            String fullName = user.getFirstName() + " " + user.getLastName();
+            String imageKey = user.getImageKey();
+            boolean isFollowedByActiveUser = databaseService.getUserDao().isFollow(activeUser.getId(), user.getId());
+            responseModelList.add(new FollowingUserResponseModel(userId, username, fullName, imageKey, isFollowedByActiveUser));
+        }
+
+        return new GetFollowersResponse(responseModelList, GetFollowersResponseType.SUCCESSFUL);
     }
 
 

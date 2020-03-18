@@ -47,8 +47,8 @@ public class UserController {
     }
 
     @GetMapping("/followers/{id}")
-    public GetFollowersResponse getFollowers(@PathVariable int id){
-        return userService.getFollowers(id);
+    public GetFollowersResponse getFollowers(@PathVariable int id, @ActiveUser User user){
+        return userService.getFollowers(user, id);
     }
 
 }
