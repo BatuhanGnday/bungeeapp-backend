@@ -72,12 +72,13 @@ public class UserService {
         if (databaseService.getUserDao().isFollow(user.getId(), request.getFollowingUserId())) {
             return new FollowResponse(FollowResponseType.FAILED);
         }
-        if (databaseService.getUserDao().getById(request.getFollowingUserId()).isPrivate()) {
+        if (followingUser.isPrivate()) {
             databaseService.getUserDao().follow(user.getId(), followingUser.getId(), Boolean.FALSE);
             return new FollowResponse(FollowResponseType.SUCCESS);
+        } else {
+            databaseService.getUserDao().follow(user.getId(), request.getFollowingUserId(), Boolean.TRUE);
+            return new FollowResponse(FollowResponseType.SUCCESS);
         }
-        databaseService.getUserDao().follow(user.getId(), request.getFollowingUserId(), Boolean.TRUE);
-        return new FollowResponse(FollowResponseType.SUCCESS);
     }
 
     /**
