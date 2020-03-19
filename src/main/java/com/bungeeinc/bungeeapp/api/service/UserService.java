@@ -64,9 +64,6 @@ public class UserService {
      */
     public FollowResponse follow(FollowRequest request, User user) {
 
-        // UsernamePasswordAuthenticationToken token = ((UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication());
-        // User user = (User)token.getPrincipal();
-
         User followingUser = databaseService.getUserDao().getById(request.getFollowingUserId());
 
         if (databaseService.getUserDao().isFollow(user.getId(), request.getFollowingUserId())) {
@@ -74,11 +71,10 @@ public class UserService {
         }
         if (followingUser.isPrivate()) {
             databaseService.getUserDao().follow(user.getId(), followingUser.getId(), Boolean.FALSE);
-            return new FollowResponse(FollowResponseType.SUCCESS);
         } else {
             databaseService.getUserDao().follow(user.getId(), request.getFollowingUserId(), Boolean.TRUE);
-            return new FollowResponse(FollowResponseType.SUCCESS);
         }
+        return new FollowResponse(FollowResponseType.SUCCESS);
     }
 
     /**

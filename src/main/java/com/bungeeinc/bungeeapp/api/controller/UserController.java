@@ -47,8 +47,8 @@ public class UserController {
         return userService.follow(request, user);
     }
 
-    @GetMapping("/followers/{id}")
-    public GetFollowersResponse getFollowers(@PathVariable int id, @ActiveUser User user){
+    @GetMapping("/followers.json")
+    public GetFollowersResponse getFollowers(@RequestParam(value = "user_id") int id, @ActiveUser User user){
         return userService.getFollowers(user, id);
     }
 
