@@ -35,7 +35,7 @@ public interface IUserDao {
 
     @SqlUpdate("insert into user_followings(user_id, following_user_id, request_accepted)" +
             " values (:userId, :followingUserId, :accepted)")
-    void follow(@Bind("userId") int userId, @Bind("followingUserId") int followingUserId,@Bind("accepted") boolean isAccepted);
+    void follow(@Bind("userId") int userId, @Bind("followingUserId") int followingUserId, @Bind("accepted") Boolean isAccepted);
 
     @SqlQuery("select role from user_accounts where id = ?")
     UserRole getRole(int id);
