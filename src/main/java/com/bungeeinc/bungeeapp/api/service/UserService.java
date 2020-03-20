@@ -6,8 +6,6 @@ import com.bungeeinc.bungeeapp.api.service.model.endpoint.user.follow.response.F
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.user.follow.response.FollowResponseType;
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.user.followrequest.GetFollowRequestResponse;
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.user.getfollowers.response.FollowingUserResponseModel;
-import com.bungeeinc.bungeeapp.api.service.model.endpoint.user.getfollowers.response.GetFollowersResponse;
-import com.bungeeinc.bungeeapp.api.service.model.endpoint.user.getfollowers.response.GetFollowersResponseType;
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.user.login.request.LoginRequest;
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.user.login.response.LoginResponse;
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.user.login.response.LoginResponseType;
@@ -21,10 +19,8 @@ import com.bungeeinc.bungeeapp.database.models.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
+
+import java.util.*;
 
 @Service
 public class UserService {
@@ -66,13 +62,13 @@ public class UserService {
 
         User followingUser = databaseService.getUserDao().getById(request.getFollowingUserId());
 
-        if (databaseService.getUserDao().isFollow(user.getId(), request.getFollowingUserId())) {
+        if (databaseService.getUserFollowingsDao().isFollow(user.getId(), request.getFollowingUserId())) {
             return new FollowResponse(FollowResponseType.FAILED);
         }
         if (followingUser.isPrivate()) {
-            databaseService.getUserDao().follow(user.getId(), followingUser.getId(), Boolean.FALSE);
+            databaseService.getUserFollowingsDao().follow(user.getId(), followingUser.getId(), Boolean.FALSE);
         } else {
-            databaseService.getUserDao().follow(user.getId(), request.getFollowingUserId(), Boolean.TRUE);
+            databaseService.getUserFollowingsDao().follow(user.getId(), request.getFollowingUserId(), Boolean.TRUE);
         }
         return new FollowResponse(FollowResponseType.SUCCESS);
     }
@@ -115,12 +111,12 @@ public class UserService {
 
         User viewedUser = databaseService.getUserDao().getById(id);
 
-        int numberOfFollowing = databaseService.getUserDao().numberOfFollowers(id);
+        int numberOfFollowing = databaseService.getUserFollowingsDao().numberOfFollowers(id);
         String biography = databaseService.getUserDao().getBiography(id);
-        boolean isFollowed = databaseService.getUserDao().isFollow(user.getId(), viewedUser.getId());
+        boolean isFollowed = databaseService.getUserFollowingsDao().isFollow(user.getId(), viewedUser.getId());
         boolean blocked_by_viewer = false;
         boolean country_block = false;
-        int numberOfFollowed = databaseService.getUserDao().numberOfFollowed(id);
+        int numberOfFollowed = databaseService.getUserFollowingsDao().numberOfFollowed(id);
         String fullName = viewedUser.getFirstName() + " " + viewedUser.getLastName();
         boolean isJoinedRecently = false;
 
@@ -151,36 +147,31 @@ public class UserService {
 
     }
 
-    public GetFollowersResponse getFollowers(User activeUser, int id) {
-        List<User> userList = databaseService.getUserDao().getFollowers(id);
-        List<FollowingUserResponseModel> responseModelList = new ArrayList<>();
 
-        for (User user : userList) {
-            int userId = user.getId();
+
+    public GetFollowRequestResponse getFollowRequests(User user) {
+        return new GetFollowRequestResponse(userToFollowingUserResponseModel(user,
+                databaseService.getUserFollowingsDao().getFollowRequests(user.getId())));
+    }
+
+    private List<FollowingUserResponseModel> userToFollowingUserResponseModel(User activeUser, List<User> userList) {
+
+        if (userList.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        List<FollowingUserResponseModel> responseModelList = new ArrayList<>();
+        for(User user : userList) {
+            int id = user.getId();
             String username = user.getUsername();
             String fullName = user.getFirstName() + " " + user.getLastName();
             String imageKey = user.getImageKey();
-            boolean isFollowedByActiveUser = databaseService.getUserDao().isFollow(activeUser.getId(), user.getId());
-            responseModelList.add(new FollowingUserResponseModel(userId, username, fullName, imageKey, isFollowedByActiveUser));
+            boolean isFollowedByActiveUser = databaseService.getUserFollowingsDao()
+                    .isFollow(activeUser.getId(), user.getId());
+            responseModelList.add(new
+                    FollowingUserResponseModel(id, username, fullName, imageKey, isFollowedByActiveUser));
         }
-
-        return new GetFollowersResponse(responseModelList, GetFollowersResponseType.SUCCESSFUL);
-    }
-
-    public GetFollowRequestResponse getFollowRequests(User user) {
-        List<User> requestList = new ArrayList<>(databaseService.getUserDao().getFollowRequests(user.getId()));
-        List<FollowingUserResponseModel> followingUserResponseModels = new ArrayList<>();
-
-        for (User user1 : requestList) {
-            int userId = user1.getId();
-            String username = user1.getUsername();
-            String fullName = user1.getFirstName() + " " + user1.getLastName();
-            String imageKey = user1.getImageKey();
-            boolean isFollowedByActiveUser = databaseService.getUserDao().isFollow(user.getId(), user1.getId());
-            followingUserResponseModels.add(new FollowingUserResponseModel(userId,
-                    username, fullName, imageKey, isFollowedByActiveUser));
-        }
-        return new GetFollowRequestResponse(followingUserResponseModels);
+        return responseModelList;
     }
 
 }

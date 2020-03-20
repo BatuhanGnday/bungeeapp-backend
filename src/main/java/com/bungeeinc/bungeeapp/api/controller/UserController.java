@@ -5,7 +5,6 @@ import com.bungeeinc.bungeeapp.api.service.UserService;
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.user.follow.request.FollowRequest;
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.user.follow.response.FollowResponse;
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.user.followrequest.GetFollowRequestResponse;
-import com.bungeeinc.bungeeapp.api.service.model.endpoint.user.getfollowers.response.GetFollowersResponse;
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.user.login.request.LoginRequest;
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.user.login.response.LoginResponse;
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.user.profile.response.ProfileResponse;
@@ -47,10 +46,6 @@ public class UserController {
         return userService.follow(request, user);
     }
 
-    @GetMapping("/followers.json")
-    public GetFollowersResponse getFollowers(@RequestParam(value = "user_id") int id, @ActiveUser User user){
-        return userService.getFollowers(user, id);
-    }
 
     @GetMapping("/me/follow-requests")
     public GetFollowRequestResponse followRequests(@ActiveUser User user){

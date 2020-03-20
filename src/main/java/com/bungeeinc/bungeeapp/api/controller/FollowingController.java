@@ -1,8 +1,7 @@
 package com.bungeeinc.bungeeapp.api.controller;
 
 import com.bungeeinc.bungeeapp.api.annotation.activeuser.ActiveUser;
-import com.bungeeinc.bungeeapp.api.service.FollowerService;
-import com.bungeeinc.bungeeapp.api.service.jwtconfig.JwtTokenUtil;
+import com.bungeeinc.bungeeapp.api.service.FollowingService;
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.user.getfollowers.response.GetFollowersResponse;
 import com.bungeeinc.bungeeapp.database.models.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,19 +11,18 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/followers")
-public class FollowerController {
+@RequestMapping("/following")
+public class FollowingController {
 
-    private final FollowerService followerService;
+    private final FollowingService followingService;
 
     @Autowired
-    public FollowerController(FollowerService followerService) {
-        this.followerService = followerService;
+    public FollowingController(FollowingService followingService) {
+        this.followingService = followingService;
     }
 
-
     @GetMapping("/list.json")
-    public GetFollowersResponse getFollowers(@ActiveUser User user, @RequestParam(value = "user_id") int id){
-        return followerService.getFollowers(user, id);
+    public GetFollowersResponse getFollowings(@RequestParam(value = "user_id") int id, @ActiveUser User user) {
+        return followingService.getFollowings(user, id);
     }
 }
