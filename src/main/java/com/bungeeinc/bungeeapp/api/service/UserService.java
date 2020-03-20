@@ -1,11 +1,7 @@
 package com.bungeeinc.bungeeapp.api.service;
 
 import com.bungeeinc.bungeeapp.api.service.jwtconfig.JwtTokenUtil;
-import com.bungeeinc.bungeeapp.api.service.model.endpoint.user.follow.request.FollowRequest;
-import com.bungeeinc.bungeeapp.api.service.model.endpoint.user.follow.response.FollowResponse;
-import com.bungeeinc.bungeeapp.api.service.model.endpoint.user.follow.response.FollowResponseType;
-import com.bungeeinc.bungeeapp.api.service.model.endpoint.user.followrequest.GetFollowRequestResponse;
-import com.bungeeinc.bungeeapp.api.service.model.endpoint.user.getfollowers.response.FollowingUserResponseModel;
+import com.bungeeinc.bungeeapp.api.service.model.UserModelSummary;
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.user.login.request.LoginRequest;
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.user.login.response.LoginResponse;
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.user.login.response.LoginResponseType;
@@ -51,26 +47,6 @@ public class UserService {
             return new LoginResponse(LoginResponseType.SUCCESS, tokenUtil.generateToken(user));
         }
         return new LoginResponse(LoginResponseType.PASSWORD_FAIL,null);
-    }
-
-    /**
-     *
-     * @param request FollowRequest
-     * @return follow type response
-     */
-    public FollowResponse follow(FollowRequest request, User user) {
-
-        User followingUser = databaseService.getUserDao().getById(request.getFollowingUserId());
-
-        if (databaseService.getUserFollowingsDao().isFollow(user.getId(), request.getFollowingUserId())) {
-            return new FollowResponse(FollowResponseType.FAILED);
-        }
-        if (followingUser.isPrivate()) {
-            databaseService.getUserFollowingsDao().follow(user.getId(), followingUser.getId(), Boolean.FALSE);
-        } else {
-            databaseService.getUserFollowingsDao().follow(user.getId(), request.getFollowingUserId(), Boolean.TRUE);
-        }
-        return new FollowResponse(FollowResponseType.SUCCESS);
     }
 
     /**
@@ -147,13 +123,13 @@ public class UserService {
 
     }
 
-    private List<FollowingUserResponseModel> userToFollowingUserResponseModel(User activeUser, List<User> userList) {
+    private List<UserModelSummary> userToFollowingUserResponseModel(User activeUser, List<User> userList) {
 
         if (userList.isEmpty()) {
             return Collections.emptyList();
         }
 
-        List<FollowingUserResponseModel> responseModelList = new ArrayList<>();
+        List<UserModelSummary> responseModelList = new ArrayList<>();
         for(User user : userList) {
             int id = user.getId();
             String username = user.getUsername();
@@ -162,7 +138,7 @@ public class UserService {
             boolean isFollowedByActiveUser = databaseService.getUserFollowingsDao()
                     .isFollow(activeUser.getId(), user.getId());
             responseModelList.add(new
-                    FollowingUserResponseModel(id, username, fullName, imageKey, isFollowedByActiveUser));
+                    UserModelSummary(id, username, fullName, imageKey, isFollowedByActiveUser));
         }
         return responseModelList;
     }

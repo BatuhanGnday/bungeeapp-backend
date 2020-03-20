@@ -18,6 +18,12 @@ public interface IUserFollowingsDao {
     @RegisterColumnMapper(User.Mapper.class)
     List<User> getFollowers(@Bind("id") int id);
 
+    @SqlQuery("select user_id from user_followings where following_user_id = :id and request_accepted = 1")
+    List<Integer> getFollowersIds(@Bind("id") int id);
+
+    @SqlQuery("select following_user_id from user_followings where user_id = :id")
+    List<Integer> getFollowingsIds(@Bind("id") int id);
+
     @SqlQuery("select * from user_accounts inner join user_followings on following_user_id = user_accounts.id and user_id = :id")
     @RegisterColumnMapper(User.Mapper.class)
     List<User> getFollowings(@Bind("id") int id);

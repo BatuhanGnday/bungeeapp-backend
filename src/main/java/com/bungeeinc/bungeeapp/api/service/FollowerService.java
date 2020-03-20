@@ -1,9 +1,10 @@
 package com.bungeeinc.bungeeapp.api.service;
 
-import com.bungeeinc.bungeeapp.api.service.model.endpoint.user.followrequest.GetFollowRequestResponse;
-import com.bungeeinc.bungeeapp.api.service.model.endpoint.user.getfollowers.response.FollowingUserResponseModel;
-import com.bungeeinc.bungeeapp.api.service.model.endpoint.user.getfollowers.response.GetFollowersResponse;
-import com.bungeeinc.bungeeapp.api.service.model.endpoint.user.getfollowers.response.GetFollowersResponseType;
+import com.bungeeinc.bungeeapp.api.service.model.endpoint.followers.incoming.GetFollowRequestResponse;
+import com.bungeeinc.bungeeapp.api.service.model.UserModelSummary;
+import com.bungeeinc.bungeeapp.api.service.model.endpoint.followers.ids.GetFollowersIdsResponse;
+import com.bungeeinc.bungeeapp.api.service.model.endpoint.followers.list.GetFollowersResponse;
+import com.bungeeinc.bungeeapp.api.service.model.endpoint.followers.GetFollowersResponseType;
 import com.bungeeinc.bungeeapp.database.DatabaseService;
 import com.bungeeinc.bungeeapp.database.models.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,13 +34,13 @@ public class FollowerService {
                 databaseService.getUserFollowingsDao().getFollowRequests(user.getId())));
     }
 
-    private List<FollowingUserResponseModel> userToFollowingUserResponseModel(User activeUser, List<User> userList) {
+    private List<UserModelSummary> userToFollowingUserResponseModel(User activeUser, List<User> userList) {
 
         if (userList.isEmpty()) {
             return Collections.emptyList();
         }
 
-        List<FollowingUserResponseModel> responseModelList = new ArrayList<>();
+        List<UserModelSummary> responseModelList = new ArrayList<>();
         for(User user : userList) {
             int id = user.getId();
             String username = user.getUsername();
@@ -48,8 +49,17 @@ public class FollowerService {
             boolean isFollowedByActiveUser = databaseService.getUserFollowingsDao()
                     .isFollow(activeUser.getId(), user.getId());
             responseModelList.add(new
-                    FollowingUserResponseModel(id, username, fullName, imageKey, isFollowedByActiveUser));
+                    UserModelSummary(id, username, fullName, imageKey, isFollowedByActiveUser));
         }
         return responseModelList;
+    }
+
+
+    public GetFollowersIdsResponse getFollowersIds(int id) {
+        List<Integer> ids = new ArrayList<>(databaseService.getUserFollowingsDao().getFollowersIds(id));
+        if (ids.isEmpty()) {
+            return new GetFollowersIdsResponse(Collections.emptyList(), GetFollowersResponseType.UNABLE_TO_GET_FOLLOWERS);
+        }
+        return new GetFollowersIdsResponse(ids, GetFollowersResponseType.SUCCESSFUL);
     }
 }

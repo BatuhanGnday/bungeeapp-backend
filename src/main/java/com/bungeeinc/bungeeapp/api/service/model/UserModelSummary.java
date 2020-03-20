@@ -1,11 +1,11 @@
-package com.bungeeinc.bungeeapp.api.service.model.endpoint.user.getfollowers.response;
+package com.bungeeinc.bungeeapp.api.service.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class FollowingUserResponseModel {
+public class UserModelSummary {
     int id;
     String username;
     String fullName;
