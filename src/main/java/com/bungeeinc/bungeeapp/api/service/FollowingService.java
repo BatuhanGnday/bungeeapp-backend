@@ -1,6 +1,7 @@
 package com.bungeeinc.bungeeapp.api.service;
 
 import com.bungeeinc.bungeeapp.api.service.jwtconfig.JwtTokenUtil;
+import com.bungeeinc.bungeeapp.api.service.model.endpoint.user.followrequest.GetFollowRequestResponse;
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.user.getfollowers.response.FollowingUserResponseModel;
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.user.getfollowers.response.GetFollowersResponse;
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.user.getfollowers.response.GetFollowersResponseType;
@@ -46,6 +47,11 @@ public class FollowingService {
                     FollowingUserResponseModel(id, username, fullName, imageKey, isFollowedByActiveUser));
         }
         return responseModelList;
+    }
+
+    public GetFollowRequestResponse getFollowRequests(User user) {
+        return new GetFollowRequestResponse(userToFollowingUserResponseModel(user,
+                databaseService.getUserFollowingsDao().getFollowRequests(user.getId())));
     }
 
 

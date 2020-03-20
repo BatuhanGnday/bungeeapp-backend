@@ -7,9 +7,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
-import java.util.Optional;
-
 @Service
 public class JwtUserDetailsService implements UserDetailsService {
 
@@ -29,16 +26,5 @@ public class JwtUserDetailsService implements UserDetailsService {
         } else {
             return user;
         }
-
-        /*        Optional<User> user = Optional.ofNullable(userService.getByUsername(s));
-
-        user.orElseThrow(() -> new UsernameNotFoundException("Not found: " + s));
-        return user.map(BungeeUserDetails::new).get();*/
-        //return user.map(User::new).get();
-        /*BungeeUserDetails user = userService.getUserDetailsByUsername(s);
-        if(user == null) {
-            throw new UsernameNotFoundException(s);
-        }
-        return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), Collections.EMPTY_LIST);*/
     }
 }

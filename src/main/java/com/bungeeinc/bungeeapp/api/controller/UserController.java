@@ -46,10 +46,4 @@ public class UserController {
         return userService.follow(request, user);
     }
 
-
-    @GetMapping("/me/follow-requests")
-    public GetFollowRequestResponse followRequests(@ActiveUser User user){
-        return userService.getFollowRequests(user);
-    }
-
 }

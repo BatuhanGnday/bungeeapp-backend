@@ -147,13 +147,6 @@ public class UserService {
 
     }
 
-
-
-    public GetFollowRequestResponse getFollowRequests(User user) {
-        return new GetFollowRequestResponse(userToFollowingUserResponseModel(user,
-                databaseService.getUserFollowingsDao().getFollowRequests(user.getId())));
-    }
-
     private List<FollowingUserResponseModel> userToFollowingUserResponseModel(User activeUser, List<User> userList) {
 
         if (userList.isEmpty()) {

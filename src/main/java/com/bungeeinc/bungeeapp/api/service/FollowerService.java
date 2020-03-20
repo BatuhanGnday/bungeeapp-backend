@@ -1,5 +1,6 @@
 package com.bungeeinc.bungeeapp.api.service;
 
+import com.bungeeinc.bungeeapp.api.service.model.endpoint.user.followrequest.GetFollowRequestResponse;
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.user.getfollowers.response.FollowingUserResponseModel;
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.user.getfollowers.response.GetFollowersResponse;
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.user.getfollowers.response.GetFollowersResponseType;
@@ -25,6 +26,11 @@ public class FollowerService {
 
         return new GetFollowersResponse(userToFollowingUserResponseModel(activeUser,
                 databaseService.getUserFollowingsDao().getFollowers(id)), GetFollowersResponseType.SUCCESSFUL);
+    }
+
+    public GetFollowRequestResponse getFollowRequests(User user) {
+        return new GetFollowRequestResponse(userToFollowingUserResponseModel(user,
+                databaseService.getUserFollowingsDao().getFollowRequests(user.getId())));
     }
 
     private List<FollowingUserResponseModel> userToFollowingUserResponseModel(User activeUser, List<User> userList) {

@@ -23,6 +23,8 @@ public class FollowingController {
 
     @GetMapping("/list.json")
     public GetFollowersResponse getFollowings(@RequestParam(value = "user_id") int id, @ActiveUser User user) {
-        return followingService.getFollowings(user, id);
+        return followingService.getFollowings(user,id);
     }
+
+
 }
