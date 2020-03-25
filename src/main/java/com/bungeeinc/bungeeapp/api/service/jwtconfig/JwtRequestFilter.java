@@ -18,11 +18,17 @@ import java.util.Collections;
 @Component
 public class JwtRequestFilter extends OncePerRequestFilter {
 
-    @Autowired
+
+
     private JwtUserDetailsService jwtUserDetailsService;
 
-    @Autowired
     private JwtTokenUtil tokenUtil;
+
+    @Autowired
+    public JwtRequestFilter(JwtUserDetailsService jwtUserDetailsService, JwtTokenUtil tokenUtil) {
+        this.jwtUserDetailsService = jwtUserDetailsService;
+        this.tokenUtil = tokenUtil;
+    }
 
     @Override
     protected void doFilterInternal(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, FilterChain filterChain) throws ServletException, IOException {

@@ -31,7 +31,12 @@ public interface IUserFollowingsDao {
     @SqlQuery("select * from user_accounts inner join user_followings on user_id = user_accounts.id and " +
             "following_user_id = :id and request_accepted = 0")
     @RegisterColumnMapper(User.Mapper.class)
-    List<User> getFollowRequests(@Bind("id") int id);
+    List<User> getIncomingRequests(@Bind("id") int id);
+
+    @SqlQuery("select * from user_accounts inner join user_followings on following_user_id = user_accounts.id and " +
+            "user_id = :id and request_accepted = 0")
+    @RegisterColumnMapper(User.Mapper.class)
+    List<User> getOutgoingRequests(@Bind("id") int id);
 
     @SqlUpdate("insert into user_followings(user_id, following_user_id, request_accepted)" +
             " values (:userId, :followingUserId, :accepted)")

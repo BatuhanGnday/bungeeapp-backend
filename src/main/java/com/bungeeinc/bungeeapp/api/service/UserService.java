@@ -13,6 +13,10 @@ import com.bungeeinc.bungeeapp.database.DatabaseService;
 import com.bungeeinc.bungeeapp.database.models.Post;
 import com.bungeeinc.bungeeapp.database.models.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -24,7 +28,7 @@ public class UserService {
     private final DatabaseService databaseService;
     private JwtTokenUtil tokenUtil;
     private BCryptPasswordEncoder bCryptPasswordEncoder;
-
+    private AuthenticationManager authenticationManager;
 
     @Autowired
     public UserService(DatabaseService databaseService) {
@@ -39,6 +43,22 @@ public class UserService {
      * @return login response with a token if success
      */
     public LoginResponse auth(LoginRequest request) {
+/*
+
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword())
+        );
+
+        if (authentication == null) {
+            return new LoginResponse(LoginResponseType.USER_NOT_EXIST, null);
+        }
+
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        User user = databaseService.getUserDao().findByUsername(request.getUsername());
+        String token = tokenUtil.generateToken(user);
+
+        return new LoginResponse(LoginResponseType.SUCCESS, token);
+*/
         User user = databaseService.getUserDao().findByUsername(request.getUsername());
         if (user == null) {
             return new LoginResponse(LoginResponseType.USER_NOT_EXIST, null);

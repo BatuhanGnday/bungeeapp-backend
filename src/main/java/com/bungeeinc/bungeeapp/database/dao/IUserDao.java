@@ -3,13 +3,10 @@ package com.bungeeinc.bungeeapp.database.dao;
 import com.bungeeinc.bungeeapp.database.models.user.User;
 import com.bungeeinc.bungeeapp.database.models.user.UserRole;
 import org.jdbi.v3.sqlobject.config.RegisterColumnMapper;
-import org.jdbi.v3.sqlobject.customizer.Bind;
 import org.jdbi.v3.sqlobject.customizer.BindBean;
 import org.jdbi.v3.sqlobject.statement.GetGeneratedKeys;
 import org.jdbi.v3.sqlobject.statement.SqlQuery;
 import org.jdbi.v3.sqlobject.statement.SqlUpdate;
-
-import java.util.List;
 
 public interface IUserDao {
 

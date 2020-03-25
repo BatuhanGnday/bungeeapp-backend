@@ -1,4 +1,4 @@
-package com.bungeeinc.bungeeapp.api.service.model.endpoint.followers.list;
+package com.bungeeinc.bungeeapp.api.service.model.endpoint.followings.list;
 
 import com.bungeeinc.bungeeapp.api.service.model.UserModelSummary;
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.followers.GetFollowersResponseType;
@@ -9,7 +9,8 @@ import java.util.List;
 
 @AllArgsConstructor
 @Getter
-public class GetFollowersResponse {
+public class GetFollowingsResponse {
+
     List<UserModelSummary> followers;
     GetFollowersResponseType type;
 }

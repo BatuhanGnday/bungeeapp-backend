@@ -20,4 +20,7 @@ public interface IPostDao {
     @SqlQuery("select * from posts where user_id = :userId")
     @RegisterColumnMapper(Post.Mapper.class)
     List<Post> getByUserId(@Bind("userId") int userId);
+
+    @SqlQuery("select count(*) from posts where id = :id")
+    boolean isExist(@Bind("id") int id);
 }

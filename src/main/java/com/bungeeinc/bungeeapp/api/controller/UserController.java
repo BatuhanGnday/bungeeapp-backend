@@ -33,8 +33,8 @@ public class UserController {
         return userService.auth(request);
     }
 
-    @GetMapping("/{id}")
-    public ProfileResponse profileResponse(@PathVariable int id, @ActiveUser User user) {
+    @GetMapping("/show")
+    public ProfileResponse profileResponse(@RequestParam(value = "user_id") int id, @ActiveUser User user) {
         return userService.getProfile(user, id);
     }
 

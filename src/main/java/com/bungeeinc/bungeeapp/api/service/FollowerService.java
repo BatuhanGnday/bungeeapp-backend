@@ -3,7 +3,7 @@ package com.bungeeinc.bungeeapp.api.service;
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.followers.incoming.GetFollowRequestResponse;
 import com.bungeeinc.bungeeapp.api.service.model.UserModelSummary;
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.followers.ids.GetFollowersIdsResponse;
-import com.bungeeinc.bungeeapp.api.service.model.endpoint.followers.list.GetFollowersResponse;
+import com.bungeeinc.bungeeapp.api.service.model.endpoint.followers.list.GetFollowingsResponse;
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.followers.GetFollowersResponseType;
 import com.bungeeinc.bungeeapp.database.DatabaseService;
 import com.bungeeinc.bungeeapp.database.models.user.User;
@@ -23,15 +23,15 @@ public class FollowerService {
         this.databaseService = databaseService;
     }
 
-    public GetFollowersResponse getFollowers(User activeUser, int id) {
+    public GetFollowingsResponse getFollowers(User activeUser, int id) {
 
-        return new GetFollowersResponse(userToFollowingUserResponseModel(activeUser,
+        return new GetFollowingsResponse(userToFollowingUserResponseModel(activeUser,
                 databaseService.getUserFollowingsDao().getFollowers(id)), GetFollowersResponseType.SUCCESSFUL);
     }
 
     public GetFollowRequestResponse getFollowRequests(User user) {
         return new GetFollowRequestResponse(userToFollowingUserResponseModel(user,
-                databaseService.getUserFollowingsDao().getFollowRequests(user.getId())));
+                databaseService.getUserFollowingsDao().getIncomingRequests(user.getId())));
     }
 
     private List<UserModelSummary> userToFollowingUserResponseModel(User activeUser, List<User> userList) {
