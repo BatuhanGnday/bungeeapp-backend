@@ -14,7 +14,8 @@ public interface IUserFollowingsDao {
             "user_id = ?")
     int numberOfFollowed(int id);
 
-    @SqlQuery("select * from user_accounts inner join user_followings on user_id = user_accounts.id and following_user_id = :id")
+    @SqlQuery("select * from user_accounts inner join user_followings on user_id = user_accounts.id and following_user_id = :id " +
+            "and request_accepted = 1")
     @RegisterColumnMapper(User.Mapper.class)
     List<User> getFollowers(@Bind("id") int id);
 

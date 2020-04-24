@@ -1,9 +1,6 @@
 package com.bungeeinc.bungeeapp.database;
 
-import com.bungeeinc.bungeeapp.database.dao.IMentionDao;
-import com.bungeeinc.bungeeapp.database.dao.IPostDao;
-import com.bungeeinc.bungeeapp.database.dao.IUserDao;
-import com.bungeeinc.bungeeapp.database.dao.IUserFollowingsDao;
+import com.bungeeinc.bungeeapp.database.dao.*;
 import lombok.Getter;
 import org.jdbi.v3.core.Jdbi;
 import org.jdbi.v3.sqlobject.SqlObjectPlugin;
@@ -25,6 +22,9 @@ public class DatabaseService {
     @Getter
     private IMentionDao mentionDao;
 
+    @Getter
+    private IUserBlocksDao userBlocksDao;
+
     @Bean
     private Jdbi jdbi() throws Exception {
         Jdbi jdbi = Jdbi.create("jdbc:mysql://localhost:3306/bungeeappdb?useSSL=false", "root", "roottoor");
@@ -33,6 +33,7 @@ public class DatabaseService {
         this.postDao = jdbi.onDemand(IPostDao.class);
         this.userFollowingsDao = jdbi.onDemand(IUserFollowingsDao.class);
         this.mentionDao = jdbi.onDemand(IMentionDao.class);
+        this.userBlocksDao = jdbi.onDemand(IUserBlocksDao.class);
         return jdbi;
     }
 

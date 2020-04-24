@@ -26,6 +26,10 @@ public interface IUserDao {
     @RegisterColumnMapper(User.Mapper.class)
     User getById(int id);
 
+    @SqlQuery("select * from user_accounts where username = ?")
+    @RegisterColumnMapper(User.Mapper.class)
+    User getByUsername(String username);
+
     @SqlQuery("select role from user_accounts where id = ?")
     UserRole getRole(int id);
 

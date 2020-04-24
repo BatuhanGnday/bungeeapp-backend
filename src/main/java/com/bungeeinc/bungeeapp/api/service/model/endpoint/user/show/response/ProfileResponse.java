@@ -1,4 +1,4 @@
-package com.bungeeinc.bungeeapp.api.service.model.endpoint.user.profile.response;
+package com.bungeeinc.bungeeapp.api.service.model.endpoint.user.show.response;
 
 import com.bungeeinc.bungeeapp.database.models.Post;
 import lombok.AllArgsConstructor;
@@ -23,6 +23,6 @@ public class ProfileResponse {
     private boolean isVerified;
     private String profilePicImageKey;
     private String username;
-    private List<Post> featuredPosts;
+    private List<Post> posts;
 
 }
