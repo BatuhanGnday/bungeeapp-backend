@@ -16,7 +16,7 @@ public class ProfileResponse {
     private int followCount;
     private boolean isFollowed;
     private int followedByCount;
-    private String fullName;
+    private String nickname;
     private int id;
     private boolean isJoinedRecently;
     private boolean isPrivate;

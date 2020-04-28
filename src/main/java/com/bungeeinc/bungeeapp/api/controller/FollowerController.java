@@ -22,8 +22,8 @@ public class FollowerController {
 
 
     @GetMapping("/list")
-    public GetFollowingsResponse getFollowers(@ActiveUser BungeeUserDetails user, @RequestParam(value = "user_id") int id){
-        return followerService.getFollowers(user, id);
+    public GetFollowingsResponse getFollowers(@ActiveUser BungeeUserDetails user){
+        return followerService.getFollowers(user);
     }
 
     @GetMapping("/incoming")

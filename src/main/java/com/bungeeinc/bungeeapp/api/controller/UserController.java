@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/accounts")
 public class UserController {
 
     private final AccountService accountService;
@@ -30,19 +30,9 @@ public class UserController {
         return accountService.register(request);
     }
 
-    @PostMapping("/auth")
+    @PostMapping("/login")
     public LoginResponse auth(@RequestBody @Valid LoginRequest request) {
         return accountService.login(request);
-    }
-
-    @GetMapping("/show")
-    public ProfileResponse show(@RequestParam(value = "user_id") int id, @ActiveUser BungeeUserDetails user) {
-        return accountService.showProfile(user, id);
-    }
-
-    @PutMapping("/update")
-    public UpdateProfileResponse updateProfileResponse(@ActiveUser BungeeUserDetails user, @RequestBody @Valid UpdateAccountRequest request) {
-        return accountService.updateUser(user, request);
     }
 
 

@@ -6,6 +6,7 @@ import com.bungeeinc.bungeeapp.api.service.model.endpoint.followers.ids.GetFollo
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.followers.list.GetFollowingsResponse;
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.followers.GetFollowersResponseType;
 import com.bungeeinc.bungeeapp.database.DatabaseService;
+import com.bungeeinc.bungeeapp.database.models.BungeeProfile;
 import com.bungeeinc.bungeeapp.database.models.account.BungeeUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,35 +24,41 @@ public class FollowerService {
         this.databaseService = databaseService;
     }
 
-    public GetFollowingsResponse getFollowers(BungeeUserDetails activeUser, int id) {
+    /**
+     *
+     * @param activeUser ActiveUser
+     * @return list of profiles which are follow active user
+     */
+    public GetFollowingsResponse getFollowers(BungeeUserDetails activeUser) {
 
-        return new GetFollowingsResponse(userToFollowingUserResponseModel(activeUser,
-                databaseService.getUserFollowingsDao().getFollowers(id)), GetFollowersResponseType.SUCCESSFUL);
+        // create list
+        List<BungeeProfile> followers = new ArrayList<>(
+                databaseService.getUserFollowingsDao().getFollowers(activeUser.getId())
+        );
+
+        if (followers.isEmpty()) {
+            return new GetFollowingsResponse(null, GetFollowersResponseType.UNABLE_TO_GET_FOLLOWERS);
+        }
+
+        return new GetFollowingsResponse(followers, GetFollowersResponseType.SUCCESSFUL);
     }
 
+    /**
+     *
+     * @param user ActiveUser
+     * @return list of profiles which are send to active user follow request
+     */
     public GetFollowRequestResponse getFollowRequests(BungeeUserDetails user) {
-        return new GetFollowRequestResponse(userToFollowingUserResponseModel(user,
-                databaseService.getUserFollowingsDao().getIncomingRequests(user.getId())));
-    }
 
-    private List<UserModelSummary> userToFollowingUserResponseModel(BungeeUserDetails activeUser, List<BungeeUserDetails> userList) {
+        List<BungeeProfile> followRequests = new ArrayList<>(
+                databaseService.getUserFollowingsDao().getIncomingRequests(user.getId())
+        );
 
-        if (userList.isEmpty()) {
-            return Collections.emptyList();
+        if (followRequests.isEmpty()) {
+            return new GetFollowRequestResponse(null);
         }
 
-        List<UserModelSummary> responseModelList = new ArrayList<>();
-        for(BungeeUserDetails user : userList) {
-            int id = user.getId();
-            String username = user.getUsername();
-            String fullName = user.getFirstName() + " " + user.getLastName();
-            String imageKey = user.getImageKey();
-            boolean isFollowedByActiveUser = databaseService.getUserFollowingsDao()
-                    .isFollow(activeUser.getId(), user.getId());
-            responseModelList.add(new
-                    UserModelSummary(id, username, fullName, imageKey, isFollowedByActiveUser));
-        }
-        return responseModelList;
+        return new GetFollowRequestResponse(followRequests);
     }
 
 
