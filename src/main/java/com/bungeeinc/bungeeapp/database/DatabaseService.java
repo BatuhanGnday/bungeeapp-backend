@@ -17,6 +17,9 @@ public class DatabaseService {
     private IPostDao postDao;
 
     @Getter
+    private IProfileDao profileDao;
+
+    @Getter
     private IUserFollowingsDao userFollowingsDao;
 
     @Getter
@@ -30,6 +33,7 @@ public class DatabaseService {
         Jdbi jdbi = Jdbi.create("jdbc:mysql://64.227.118.33:3306/bungeeappdb?useSSL=false", "root", "bungeeappdb");
         jdbi.installPlugin(new SqlObjectPlugin());
         this.accountDao = jdbi.onDemand(IAccountDao.class);
+        this.profileDao = jdbi.onDemand(IProfileDao.class);
         this.postDao = jdbi.onDemand(IPostDao.class);
         this.userFollowingsDao = jdbi.onDemand(IUserFollowingsDao.class);
         this.mentionDao = jdbi.onDemand(IMentionDao.class);
