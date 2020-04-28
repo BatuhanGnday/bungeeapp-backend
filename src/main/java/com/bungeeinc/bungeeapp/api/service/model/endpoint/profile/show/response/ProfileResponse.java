@@ -1,4 +1,4 @@
-package com.bungeeinc.bungeeapp.api.service.model.endpoint.user.show.response;
+package com.bungeeinc.bungeeapp.api.service.model.endpoint.profile.show.response;
 
 import com.bungeeinc.bungeeapp.database.models.Post;
 import lombok.AllArgsConstructor;

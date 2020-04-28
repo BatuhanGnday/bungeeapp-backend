@@ -1,6 +1,9 @@
 package com.bungeeinc.bungeeapp.api.service;
 
-import com.bungeeinc.bungeeapp.api.service.model.endpoint.user.show.response.ProfileResponse;
+import com.bungeeinc.bungeeapp.api.service.model.endpoint.profile.show.response.ProfileResponse;
+import com.bungeeinc.bungeeapp.api.service.model.endpoint.profile.update.request.UpdateProfileRequest;
+import com.bungeeinc.bungeeapp.api.service.model.endpoint.profile.update.response.UpdateProfileResponse;
+import com.bungeeinc.bungeeapp.api.service.model.endpoint.profile.update.response.UpdateProfileResponseType;
 import com.bungeeinc.bungeeapp.database.DatabaseService;
 import com.bungeeinc.bungeeapp.database.models.BungeeProfile;
 import com.bungeeinc.bungeeapp.database.models.Post;
@@ -42,6 +45,25 @@ public class ProfileService {
         return new ProfileResponse(biography, blockedByViewer, countryBlock, followCount, isFollowed, followedByCount,
                 nickname, profileUserId, joinedRecently, isPrivate, isVerified, profileImage, username, posts);
     }
+
+    public UpdateProfileResponse updateProfile(UpdateProfileRequest request, BungeeUserDetails userDetails) {
+        BungeeProfile profile = databaseService.getProfileDao().getByUserId(userDetails.getId());
+
+        if (profile == null) {
+            return new UpdateProfileResponse(UpdateProfileResponseType.FAILED);
+        }
+
+        profile.setNickname(request.getNickname());
+        profile.setBiography(request.getBiography());
+        profile.setPrivate(request.isPrivate());
+        profile.setEmail(request.getEmail());
+        profile.setBannerKey(request.getBannerKey());
+        profile.setProfileImageKey(request.getProfileImageKey());
+        profile.setBirthday(request.getBirthday());
+
+        return new UpdateProfileResponse(UpdateProfileResponseType.SUCCESS);
+    }
+
 
     private boolean isJoinedRecently(int userId) {
         Date currentTime = new Date();

@@ -1,4 +1,4 @@
-package com.bungeeinc.bungeeapp.api.service.model.endpoint.user.auth.request;
+package com.bungeeinc.bungeeapp.api.service.model.endpoint.account.auth.request;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

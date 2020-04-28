@@ -3,7 +3,6 @@ package com.bungeeinc.bungeeapp.api.service;
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.followings.GetFollowingsResponseType;
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.followings.create.response.FollowResponse;
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.followings.create.response.FollowResponseType;
-import com.bungeeinc.bungeeapp.api.service.model.UserModelSummary;
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.followers.list.GetFollowingsResponse;
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.followers.GetFollowersResponseType;
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.followings.ids.GetFollowingsIdsResponse;

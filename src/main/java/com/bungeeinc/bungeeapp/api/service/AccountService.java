@@ -1,15 +1,15 @@
 package com.bungeeinc.bungeeapp.api.service;
 
 import com.bungeeinc.bungeeapp.api.service.jwtconfig.JwtTokenUtil;
-import com.bungeeinc.bungeeapp.api.service.model.endpoint.user.auth.request.LoginRequest;
-import com.bungeeinc.bungeeapp.api.service.model.endpoint.user.auth.response.LoginResponse;
-import com.bungeeinc.bungeeapp.api.service.model.endpoint.user.auth.response.LoginResponseType;
-import com.bungeeinc.bungeeapp.api.service.model.endpoint.user.signup.request.RegisterRequest;
-import com.bungeeinc.bungeeapp.api.service.model.endpoint.user.signup.response.RegisterResponse;
-import com.bungeeinc.bungeeapp.api.service.model.endpoint.user.signup.response.RegisterResponseType;
-import com.bungeeinc.bungeeapp.api.service.model.endpoint.user.update.request.UpdateAccountRequest;
-import com.bungeeinc.bungeeapp.api.service.model.endpoint.user.update.response.UpdateProfileResponse;
-import com.bungeeinc.bungeeapp.api.service.model.endpoint.user.update.response.UpdateProfileResponseType;
+import com.bungeeinc.bungeeapp.api.service.model.endpoint.account.auth.request.LoginRequest;
+import com.bungeeinc.bungeeapp.api.service.model.endpoint.account.auth.response.LoginResponse;
+import com.bungeeinc.bungeeapp.api.service.model.endpoint.account.auth.response.LoginResponseType;
+import com.bungeeinc.bungeeapp.api.service.model.endpoint.account.signup.request.RegisterRequest;
+import com.bungeeinc.bungeeapp.api.service.model.endpoint.account.signup.response.RegisterResponse;
+import com.bungeeinc.bungeeapp.api.service.model.endpoint.account.signup.response.RegisterResponseType;
+import com.bungeeinc.bungeeapp.api.service.model.endpoint.account.update.request.UpdateAccountRequest;
+import com.bungeeinc.bungeeapp.api.service.model.endpoint.profile.update.response.UpdateProfileResponse;
+import com.bungeeinc.bungeeapp.api.service.model.endpoint.profile.update.response.UpdateProfileResponseType;
 import com.bungeeinc.bungeeapp.database.DatabaseService;
 import com.bungeeinc.bungeeapp.database.models.account.BungeeUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;

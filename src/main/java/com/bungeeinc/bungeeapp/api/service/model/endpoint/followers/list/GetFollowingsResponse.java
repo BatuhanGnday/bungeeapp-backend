@@ -1,6 +1,5 @@
 package com.bungeeinc.bungeeapp.api.service.model.endpoint.followers.list;
 
-import com.bungeeinc.bungeeapp.api.service.model.UserModelSummary;
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.followers.GetFollowersResponseType;
 import com.bungeeinc.bungeeapp.database.models.BungeeProfile;
 import lombok.AllArgsConstructor;
