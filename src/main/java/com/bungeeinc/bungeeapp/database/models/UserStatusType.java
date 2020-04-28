@@ -1,4 +1,4 @@
-package com.bungeeinc.bungeeapp.database.models.user;
+package com.bungeeinc.bungeeapp.database.models;
 
 public enum  UserStatusType {
     ONLINE,

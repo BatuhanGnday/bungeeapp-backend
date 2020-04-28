@@ -6,7 +6,7 @@ import com.bungeeinc.bungeeapp.api.service.model.endpoint.followers.ids.GetFollo
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.followers.list.GetFollowingsResponse;
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.followers.GetFollowersResponseType;
 import com.bungeeinc.bungeeapp.database.DatabaseService;
-import com.bungeeinc.bungeeapp.database.models.user.User;
+import com.bungeeinc.bungeeapp.database.models.account.BungeeUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.ArrayList;
@@ -19,29 +19,29 @@ public class FollowerService {
     private final DatabaseService databaseService;
 
     @Autowired
-    public FollowerService(DatabaseService databaseService, UserService userService) {
+    public FollowerService(DatabaseService databaseService) {
         this.databaseService = databaseService;
     }
 
-    public GetFollowingsResponse getFollowers(User activeUser, int id) {
+    public GetFollowingsResponse getFollowers(BungeeUserDetails activeUser, int id) {
 
         return new GetFollowingsResponse(userToFollowingUserResponseModel(activeUser,
                 databaseService.getUserFollowingsDao().getFollowers(id)), GetFollowersResponseType.SUCCESSFUL);
     }
 
-    public GetFollowRequestResponse getFollowRequests(User user) {
+    public GetFollowRequestResponse getFollowRequests(BungeeUserDetails user) {
         return new GetFollowRequestResponse(userToFollowingUserResponseModel(user,
                 databaseService.getUserFollowingsDao().getIncomingRequests(user.getId())));
     }
 
-    private List<UserModelSummary> userToFollowingUserResponseModel(User activeUser, List<User> userList) {
+    private List<UserModelSummary> userToFollowingUserResponseModel(BungeeUserDetails activeUser, List<BungeeUserDetails> userList) {
 
         if (userList.isEmpty()) {
             return Collections.emptyList();
         }
 
         List<UserModelSummary> responseModelList = new ArrayList<>();
-        for(User user : userList) {
+        for(BungeeUserDetails user : userList) {
             int id = user.getId();
             String username = user.getUsername();
             String fullName = user.getFirstName() + " " + user.getLastName();

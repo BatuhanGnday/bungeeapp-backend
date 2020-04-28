@@ -2,7 +2,7 @@ package com.bungeeinc.bungeeapp.api.annotation.activeuser;
 
 import com.bungeeinc.bungeeapp.api.exception.authentication.FailedToGetUserFromSecurityContextException;
 import com.bungeeinc.bungeeapp.api.exception.authentication.UnsupportedAuthenticationTypeException;
-import com.bungeeinc.bungeeapp.database.models.user.User;
+import com.bungeeinc.bungeeapp.database.models.account.BungeeUserDetails;
 import org.springframework.core.MethodParameter;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -16,7 +16,7 @@ public class ActiveUserArgumentResolver implements HandlerMethodArgumentResolver
     @Override
     public boolean supportsParameter(MethodParameter methodParameter) {
         return methodParameter.hasParameterAnnotation(ActiveUser.class)
-                && methodParameter.getParameterType().equals(User.class);
+                && methodParameter.getParameterType().equals(BungeeUserDetails.class);
     }
 
     @Override
@@ -36,11 +36,11 @@ public class ActiveUserArgumentResolver implements HandlerMethodArgumentResolver
 
         Object principal = usernamePasswordAuthenticationToken.getPrincipal();
 
-        if (!(principal instanceof User)) {
+        if (!(principal instanceof BungeeUserDetails)) {
             throw new FailedToGetUserFromSecurityContextException();
         }
 
-        User user = (User)principal;
+        BungeeUserDetails user = (BungeeUserDetails)principal;
 
         return user;
     }

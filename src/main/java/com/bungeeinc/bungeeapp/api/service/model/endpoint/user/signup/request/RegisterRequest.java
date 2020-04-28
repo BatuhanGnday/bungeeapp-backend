@@ -14,12 +14,4 @@ public class RegisterRequest {
     @NonNull
     private String password;
 
-    @NonNull
-    private String firstName;
-
-    @NonNull
-    private String lastName;
-
-    @NonNull
-    private String email;
 }

@@ -8,7 +8,7 @@ import com.bungeeinc.bungeeapp.api.service.model.endpoint.followers.list.GetFoll
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.followers.GetFollowersResponseType;
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.followings.ids.GetFollowingsIdsResponse;
 import com.bungeeinc.bungeeapp.database.DatabaseService;
-import com.bungeeinc.bungeeapp.database.models.user.User;
+import com.bungeeinc.bungeeapp.database.models.account.BungeeUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -36,7 +36,7 @@ public class FollowingService {
      * @param id User id you want to get followings
      * @return GetFollowerResponse
      */
-    public GetFollowingsResponse getFollowings(User user, int id) {
+    public GetFollowingsResponse getFollowings(BungeeUserDetails user, int id) {
         return new GetFollowingsResponse(userToFollowingUserResponseModel(user,
                 databaseService.getUserFollowingsDao().getFollowings(id)), GetFollowersResponseType.SUCCESSFUL);
     }
@@ -46,9 +46,9 @@ public class FollowingService {
      * @param id following user id
      * @return follow type response
      */
-    public FollowResponse follow(int id, User user) {
+    public FollowResponse follow(int id, BungeeUserDetails user) {
 
-        User followingUser = databaseService.getUserDao().getById(id);
+        BungeeUserDetails followingUser = databaseService.getAccountDao().getById(id);
 
         if (databaseService.getUserFollowingsDao().isFollow(user.getId(), id)) {
             return new FollowResponse(FollowResponseType.FAILED);
@@ -74,7 +74,7 @@ public class FollowingService {
         return new GetFollowingsIdsResponse(ids, GetFollowingsResponseType.SUCCESSFUL);
     }
 
-    private List<UserModelSummary> userToFollowingUserResponseModel(User activeUser, List<User> userList) {
+    private List<UserModelSummary> userToFollowingUserResponseModel(BungeeUserDetails activeUser, List<BungeeUserDetails> userList) {
 
         if (userList.isEmpty()) {
             return Collections.emptyList();
@@ -82,7 +82,7 @@ public class FollowingService {
 
         List<UserModelSummary> responseModelList = new ArrayList<>();
 
-        for(User user : userList) {
+        for(BungeeUserDetails user : userList) {
             int id = user.getId();
             String username = user.getUsername();
             String fullName = user.getFirstName() + " " + user.getLastName();
@@ -96,15 +96,15 @@ public class FollowingService {
     }
 
     // TODO: revise the return type and change it as GetOutgoingRequestsResponse
-    public GetFollowingsResponse getOutgoingRequests(User user) {
-        List<User> users = databaseService.getUserFollowingsDao().getOutgoingRequests(user.getId());
+    public GetFollowingsResponse getOutgoingRequests(BungeeUserDetails user) {
+        List<BungeeUserDetails> users = databaseService.getUserFollowingsDao().getOutgoingRequests(user.getId());
         List<UserModelSummary> responseModelList = new ArrayList<>();
 
         if (users.isEmpty()) {
             // TODO: change type
             return new GetFollowingsResponse(null, GetFollowersResponseType.UNABLE_TO_GET_FOLLOWERS);
         }
-        for (User user1 : users) {
+        for (BungeeUserDetails user1 : users) {
             int id = user1.getId();
             String username = user1.getUsername();
             String fullName = user1.getFirstName() + " " + user.getLastName();

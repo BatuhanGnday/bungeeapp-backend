@@ -7,7 +7,7 @@ import com.bungeeinc.bungeeapp.api.service.model.endpoint.post.share.response.Sh
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.post.share.response.ShareResponseType;
 import com.bungeeinc.bungeeapp.database.DatabaseService;
 import com.bungeeinc.bungeeapp.database.models.Post;
-import com.bungeeinc.bungeeapp.database.models.user.User;
+import com.bungeeinc.bungeeapp.database.models.account.BungeeUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,7 +31,7 @@ public class PostService {
      * @param request ShareRequest
      * @return ShareResponse
      */
-    public ShareResponse share(User user, ShareRequest request) {
+    public ShareResponse share(BungeeUserDetails user, ShareRequest request) {
         databaseService.getPostDao().createPost(new Post(user.getId(),request.getText(), request.getImageKey()));
         return new ShareResponse(ShareResponseType.SUCCESS);
     }

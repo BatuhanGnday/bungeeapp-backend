@@ -5,14 +5,9 @@ import lombok.Getter;
 
 @AllArgsConstructor
 @Getter
-public class UpdateProfileRequest {
+public class UpdateAccountRequest {
     String username;
     String password;
-    String firstName;
-    String lastName;
-    String email;
-    String biography;
-    int age;
-    String imageKey;
-    boolean isPrivate;
+    Boolean deleted;
+    Boolean enabled;
 }

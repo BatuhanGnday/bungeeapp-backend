@@ -5,7 +5,7 @@ import com.bungeeinc.bungeeapp.api.service.FollowerService;
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.followers.incoming.GetFollowRequestResponse;
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.followers.ids.GetFollowersIdsResponse;
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.followers.list.GetFollowingsResponse;
-import com.bungeeinc.bungeeapp.database.models.user.User;
+import com.bungeeinc.bungeeapp.database.models.account.BungeeUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,12 +22,12 @@ public class FollowerController {
 
 
     @GetMapping("/list")
-    public GetFollowingsResponse getFollowers(@ActiveUser User user, @RequestParam(value = "user_id") int id){
+    public GetFollowingsResponse getFollowers(@ActiveUser BungeeUserDetails user, @RequestParam(value = "user_id") int id){
         return followerService.getFollowers(user, id);
     }
 
     @GetMapping("/incoming")
-    public GetFollowRequestResponse getFollowRequestResponse(@ActiveUser User user) {
+    public GetFollowRequestResponse getFollowRequestResponse(@ActiveUser BungeeUserDetails user) {
         return followerService.getFollowRequests(user);
     }
 

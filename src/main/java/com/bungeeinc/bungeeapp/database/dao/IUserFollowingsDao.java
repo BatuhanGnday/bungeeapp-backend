@@ -1,6 +1,6 @@
 package com.bungeeinc.bungeeapp.database.dao;
 
-import com.bungeeinc.bungeeapp.database.models.user.User;
+import com.bungeeinc.bungeeapp.database.models.account.BungeeUserDetails;
 import org.jdbi.v3.sqlobject.config.RegisterColumnMapper;
 import org.jdbi.v3.sqlobject.customizer.Bind;
 import org.jdbi.v3.sqlobject.statement.SqlQuery;
@@ -14,10 +14,10 @@ public interface IUserFollowingsDao {
             "user_id = ?")
     int numberOfFollowed(int id);
 
-    @SqlQuery("select * from user_accounts inner join user_followings on user_id = user_accounts.id and following_user_id = :id " +
+    @SqlQuery("select * from accounts inner join user_followings on user_id = accounts.id and following_user_id = :id " +
             "and request_accepted = 1")
-    @RegisterColumnMapper(User.Mapper.class)
-    List<User> getFollowers(@Bind("id") int id);
+    @RegisterColumnMapper(BungeeUserDetails.Mapper.class)
+    List<BungeeUserDetails> getFollowers(@Bind("id") int id);
 
     @SqlQuery("select user_id from user_followings where following_user_id = :id and request_accepted = 1")
     List<Integer> getFollowersIds(@Bind("id") int id);
@@ -25,19 +25,19 @@ public interface IUserFollowingsDao {
     @SqlQuery("select following_user_id from user_followings where user_id = :id")
     List<Integer> getFollowingsIds(@Bind("id") int id);
 
-    @SqlQuery("select * from user_accounts inner join user_followings on following_user_id = user_accounts.id and user_id = :id")
-    @RegisterColumnMapper(User.Mapper.class)
-    List<User> getFollowings(@Bind("id") int id);
+    @SqlQuery("select * from accounts inner join user_followings on following_user_id = accounts.id and user_id = :id")
+    @RegisterColumnMapper(BungeeUserDetails.Mapper.class)
+    List<BungeeUserDetails> getFollowings(@Bind("id") int id);
 
-    @SqlQuery("select * from user_accounts inner join user_followings on user_id = user_accounts.id and " +
+    @SqlQuery("select * from accounts inner join user_followings on user_id = accounts.id and " +
             "following_user_id = :id and request_accepted = 0")
-    @RegisterColumnMapper(User.Mapper.class)
-    List<User> getIncomingRequests(@Bind("id") int id);
+    @RegisterColumnMapper(BungeeUserDetails.Mapper.class)
+    List<BungeeUserDetails> getIncomingRequests(@Bind("id") int id);
 
-    @SqlQuery("select * from user_accounts inner join user_followings on following_user_id = user_accounts.id and " +
+    @SqlQuery("select * from accounts inner join user_followings on following_user_id = accounts.id and " +
             "user_id = :id and request_accepted = 0")
-    @RegisterColumnMapper(User.Mapper.class)
-    List<User> getOutgoingRequests(@Bind("id") int id);
+    @RegisterColumnMapper(BungeeUserDetails.Mapper.class)
+    List<BungeeUserDetails> getOutgoingRequests(@Bind("id") int id);
 
     @SqlUpdate("insert into user_followings(user_id, following_user_id, request_accepted)" +
             " values (:userId, :followingUserId, :accepted)")

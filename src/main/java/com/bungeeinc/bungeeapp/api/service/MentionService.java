@@ -5,7 +5,7 @@ import com.bungeeinc.bungeeapp.api.service.model.endpoint.mentions.create.respon
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.mentions.create.response.CreateMentionResponseType;
 import com.bungeeinc.bungeeapp.database.DatabaseService;
 import com.bungeeinc.bungeeapp.database.models.Mention;
-import com.bungeeinc.bungeeapp.database.models.user.User;
+import com.bungeeinc.bungeeapp.database.models.account.BungeeUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +19,7 @@ public class MentionService {
         this.databaseService = databaseService;
     }
 
-    public CreateMentionResponse createMention(User user, int postId,  CreateMentionRequest request) {
+    public CreateMentionResponse createMention(BungeeUserDetails user, int postId, CreateMentionRequest request) {
 
         if (!databaseService.getPostDao().isExist(postId)) {
             return new CreateMentionResponse(null, CreateMentionResponseType.POST_DOES_NOT_EXISTS);

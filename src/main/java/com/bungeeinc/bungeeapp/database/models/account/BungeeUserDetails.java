@@ -1,4 +1,4 @@
-package com.bungeeinc.bungeeapp.database.models.user;
+package com.bungeeinc.bungeeapp.database.models.account;
 
 import lombok.Data;
 import lombok.NonNull;
@@ -6,6 +6,7 @@ import org.jdbi.v3.core.mapper.ColumnMapper;
 import org.jdbi.v3.core.statement.StatementContext;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
@@ -13,7 +14,7 @@ import java.util.Collection;
 import java.util.Collections;
 
 @Data
-public class User implements UserDetails {
+public class BungeeUserDetails implements UserDetails {
 
 
     private int id;
@@ -24,29 +25,18 @@ public class User implements UserDetails {
     @NonNull
     private String password;
 
-    private String role;
-
-    private String biography;
-
-    @NonNull
-    private boolean isPrivate = false;
-
-    @NonNull
-    private String firstName;
-
-    @NonNull
-    private String lastName;
-
-    @NonNull
-    private String email;
-
-    private int age;
-
     private boolean isDeleted;
 
-    private String imageKey;
+    private boolean isEnabled;
 
     private Timestamp createdOn;
+
+    public BungeeUserDetails(String username, String password) {
+        this.username = username;
+        this.password = password;
+        this.isDeleted = false;
+        this.isEnabled = true;
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -73,32 +63,21 @@ public class User implements UserDetails {
         return false;
     }
 
-    public static class Mapper implements ColumnMapper<User> {
+    public static class Mapper implements ColumnMapper<BungeeUserDetails> {
 
         @Override
-        public User map(ResultSet r, int columnNumber, StatementContext ctx) throws SQLException {
+        public BungeeUserDetails map(ResultSet r, int columnNumber, StatementContext ctx) throws SQLException {
             int id = r.getInt("id");
             String username = r.getString("username");
             String password = r.getString("password");
-            String role = r.getString("role");
-            String firstName = r.getString("first_name");
-            String lastName = r.getString("last_name");
-            String email = r.getString("email");
-            String biography = r.getString("biography");
-            int age = r.getInt("age");
-            boolean isDeleted = r.getBoolean("is_deleted");
-            String imageKey = r.getString("image_key");
+            boolean isDeleted = r.getBoolean("deleted");
+            boolean isEnabled = r.getBoolean("enabled");
             Timestamp createdOn = r.getTimestamp("created_on");
-            boolean isPrivate = r.getBoolean("private");
-            User user = new User(username, password, firstName, lastName, email);
+            BungeeUserDetails user = new BungeeUserDetails(username, password);
             user.setId(id);
-            user.setRole(role);
             user.setCreatedOn(createdOn);
-            user.setBiography(biography);
-            user.setImageKey(imageKey);
-            user.setAge(age);
+            user.setEnabled(isEnabled);
             user.setDeleted(isDeleted);
-            user.setPrivate(isPrivate);
             return user;
         }
     }
