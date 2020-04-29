@@ -63,8 +63,6 @@ public class ProfileService {
 
         return new UpdateProfileResponse(UpdateProfileResponseType.SUCCESS);
     }
-
-
     private boolean isJoinedRecently(int userId) {
         Date currentTime = new Date();
         long createdOnLong = databaseService.getAccountDao().getById(userId).getCreatedOn().getTime();

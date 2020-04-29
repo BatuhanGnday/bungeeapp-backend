@@ -14,7 +14,7 @@ public interface IProfileDao {
     @GetGeneratedKeys
     int createProfile(@BindBean BungeeProfile profile);
 
-    @SqlQuery("select * from profiles where user_id = :userId")
+    @SqlQuery("select * from profiles where user_id = ?")
     @RegisterColumnMapper(BungeeProfile.Mapper.class)
     BungeeProfile getByUserId(int id);
 

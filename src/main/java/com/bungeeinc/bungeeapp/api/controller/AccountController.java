@@ -6,17 +6,21 @@ import com.bungeeinc.bungeeapp.api.service.model.endpoint.account.auth.response.
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.account.signup.request.RegisterRequest;
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.account.signup.response.RegisterResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/accounts")
-public class UserController {
+public class AccountController {
 
     private final AccountService accountService;
 
     @Autowired
-    public UserController(AccountService accountService) {
+    public AccountController(AccountService accountService) {
         this.accountService = accountService;
     }
 
