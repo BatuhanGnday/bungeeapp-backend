@@ -1,5 +1,8 @@
 package com.bungeeinc.bungeeapp.api.service;
 
+import com.bungeeinc.bungeeapp.api.annotation.activeuser.ActiveUser;
+import com.bungeeinc.bungeeapp.api.service.model.endpoint.profile.setprivate.response.SetPrivateResponse;
+import com.bungeeinc.bungeeapp.api.service.model.endpoint.profile.setprivate.response.SetPrivateResponseType;
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.profile.show.response.ProfileResponse;
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.profile.update.request.UpdateProfileRequest;
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.profile.update.response.UpdateProfileResponse;
@@ -13,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class ProfileService {
@@ -69,5 +73,14 @@ public class ProfileService {
         long currentTimeLong = currentTime.getTime();
 
         return (currentTimeLong - createdOnLong < 259000000L);
+    }
+
+    public SetPrivateResponse setPrivate(BungeeUserDetails userDetails) {
+        BungeeProfile profile = databaseService.getProfileDao().getByUserId(userDetails.getId());
+        if (profile.isPrivate()) {
+            return new SetPrivateResponse(SetPrivateResponseType.FAILED);
+        }
+        profile.setPrivate(true);
+        return new SetPrivateResponse(SetPrivateResponseType.SUCCESS);
     }
 }

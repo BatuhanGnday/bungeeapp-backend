@@ -1,6 +1,7 @@
 package com.bungeeinc.bungeeapp.api.service.jwtconfig;
 
 import io.jsonwebtoken.ExpiredJwtException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,6 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Collections;
 
+@Slf4j
 @Component
 public class JwtRequestFilter extends OncePerRequestFilter {
 
@@ -39,8 +41,12 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
         String jwtToken = null;
 
+        log.warn("token: " + requestTokenHeader);
+        log.warn("username: " + username);
+
         if (requestTokenHeader != null && requestTokenHeader.startsWith("Bearer ")) {
             jwtToken = requestTokenHeader.substring(7);
+            log.debug("username: " + username);
 
             try {
                 username = tokenUtil.getUsernameFromToken(jwtToken);

@@ -2,6 +2,8 @@ package com.bungeeinc.bungeeapp.api.controller;
 
 import com.bungeeinc.bungeeapp.api.annotation.activeuser.ActiveUser;
 import com.bungeeinc.bungeeapp.api.service.ProfileService;
+import com.bungeeinc.bungeeapp.api.service.model.endpoint.profile.setprivate.response.SetPrivateResponse;
+import com.bungeeinc.bungeeapp.api.service.model.endpoint.profile.setprivate.response.SetPrivateResponseType;
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.profile.update.request.UpdateProfileRequest;
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.profile.update.response.UpdateProfileResponse;
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.profile.show.response.ProfileResponse;
@@ -31,5 +33,9 @@ public class ProfileController {
     public UpdateProfileResponse update(@RequestBody @Valid UpdateProfileRequest request,
                                         @ActiveUser BungeeUserDetails userDetails){
         return profileService.updateProfile(request, userDetails);
+    }
+    @PutMapping("/set-private")
+    public SetPrivateResponse setPrivate (@ActiveUser BungeeUserDetails userDetails) {
+        return profileService.setPrivate(userDetails);
     }
 }
