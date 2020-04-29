@@ -12,11 +12,13 @@ import com.bungeeinc.bungeeapp.api.service.model.endpoint.profile.update.respons
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.profile.update.response.UpdateProfileResponseType;
 import com.bungeeinc.bungeeapp.database.DatabaseService;
 import com.bungeeinc.bungeeapp.database.models.account.BungeeUserDetails;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
+@Slf4j
 public class AccountService {
 
     private final DatabaseService databaseService;
@@ -38,6 +40,7 @@ public class AccountService {
     public LoginResponse login(LoginRequest request) {
         BungeeUserDetails user = databaseService.getAccountDao().findByUsername(request.getUsername());
         if (user == null) {
+            log.info("bu user yok kardeşim sg");
             return new LoginResponse(LoginResponseType.USER_NOT_EXIST, null);
         }
         if(bCryptPasswordEncoder.matches(request.getPassword(), user.getPassword())){
@@ -59,6 +62,7 @@ public class AccountService {
         );
 
         if (this.databaseService.getAccountDao().isExistByUsername(user)) {
+            log.info("username exists");
             return new RegisterResponse(RegisterResponseType.USERNAME_OR_EMAIL_EXISTS);
         }
         user.setId(

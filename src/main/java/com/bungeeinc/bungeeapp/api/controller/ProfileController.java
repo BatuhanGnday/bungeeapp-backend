@@ -30,6 +30,6 @@ public class ProfileController {
     @PutMapping("/update")
     public UpdateProfileResponse update(@RequestBody @Valid UpdateProfileRequest request,
                                         @ActiveUser BungeeUserDetails userDetails){
-        return profileService.updateProfile(userDetails);
+        return profileService.updateProfile(request, userDetails);
     }
 }
