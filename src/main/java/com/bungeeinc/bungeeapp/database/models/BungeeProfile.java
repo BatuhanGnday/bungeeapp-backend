@@ -3,8 +3,7 @@ package com.bungeeinc.bungeeapp.database.models;
 import lombok.Data;
 import org.jdbi.v3.core.mapper.ColumnMapper;
 import org.jdbi.v3.core.statement.StatementContext;
-
-import java.sql.Date;
+import java.util.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -18,6 +17,8 @@ public class BungeeProfile {
     String nickname;
 
     String biography;
+
+    boolean isPrivate;
 
     String email;
 
@@ -35,6 +36,7 @@ public class BungeeProfile {
             int userId = r.getInt("user_id");
             String nickname = r.getString("nickname");
             String biography = r.getString("biography");
+            boolean isPrivate = r.getBoolean("private");
             String email = r.getString("email");
             String bannerKey = r.getString("banner_key");
             String profileImageKey = r.getString("profile_image_key");
@@ -45,6 +47,7 @@ public class BungeeProfile {
             profile.setUserId(userId);
             profile.setNickname(nickname);
             profile.setBiography(biography);
+            profile.setPrivate(isPrivate);
             profile.setEmail(email);
             profile.setBannerKey(bannerKey);
             profile.setProfileImageKey(profileImageKey);

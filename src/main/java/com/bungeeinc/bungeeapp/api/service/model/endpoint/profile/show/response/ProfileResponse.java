@@ -1,4 +1,4 @@
-package com.bungeeinc.bungeeapp.api.service.model.endpoint.user.show.response;
+package com.bungeeinc.bungeeapp.api.service.model.endpoint.profile.show.response;
 
 import com.bungeeinc.bungeeapp.database.models.Post;
 import lombok.AllArgsConstructor;
@@ -16,7 +16,7 @@ public class ProfileResponse {
     private int followCount;
     private boolean isFollowed;
     private int followedByCount;
-    private String fullName;
+    private String nickname;
     private int id;
     private boolean isJoinedRecently;
     private boolean isPrivate;

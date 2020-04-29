@@ -1,4 +1,4 @@
-package com.bungeeinc.bungeeapp.api.service.model.endpoint.user.update.request;
+package com.bungeeinc.bungeeapp.api.service.model.endpoint.account.update.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

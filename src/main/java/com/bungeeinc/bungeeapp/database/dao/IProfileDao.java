@@ -16,12 +16,11 @@ public interface IProfileDao {
 
     @SqlQuery("select * from profiles where user_id = :userId")
     @RegisterColumnMapper(BungeeProfile.Mapper.class)
-    BungeeProfile getProfileByUserId(int id);
+    BungeeProfile getByUserId(int id);
 
     @SqlUpdate("update profiles set nickname = :nickname, biography = :biography, email = :email," +
             " banner_key = :bannerKey, profile_image_key = :profileImageKey, birthday = :birthday " +
             "where user_id = userId")
     void updateProfile(@BindBean BungeeProfile profile);
-
 
 }
