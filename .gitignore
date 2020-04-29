@@ -1,3 +1,4 @@
 /bungeeapp-backend.iml
 *.iml
-/.gitignore
+target
+.idea
