@@ -76,8 +76,8 @@ public class BungeeUserDetails implements UserDetails {
             BungeeUserDetails user = new BungeeUserDetails(username, password);
             user.setId(id);
             user.setCreatedOn(createdOn);
-            user.setEnabled(isEnabled);
-            user.setDeleted(isDeleted);
+            //user.setEnabled(isEnabled);
+            //user.setDeleted(isDeleted);
             return user;
         }
     }

@@ -1,17 +1,20 @@
 package com.bungeeinc.bungeeapp.database.models;
 
 import lombok.Data;
+import lombok.NonNull;
 import org.jdbi.v3.core.mapper.ColumnMapper;
 import org.jdbi.v3.core.statement.StatementContext;
-import java.util.Date;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Date;
 
 @Data
 public class BungeeProfile {
 
     int id;
 
+    @NonNull
     int userId;
 
     String nickname;
@@ -42,9 +45,8 @@ public class BungeeProfile {
             String profileImageKey = r.getString("profile_image_key");
             Date birthday = r.getDate("birthday");
 
-            BungeeProfile profile = new BungeeProfile();
+            BungeeProfile profile = new BungeeProfile(userId);
             profile.setId(id);
-            profile.setUserId(userId);
             profile.setNickname(nickname);
             profile.setBiography(biography);
             profile.setPrivate(isPrivate);

@@ -10,7 +10,8 @@ import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 public interface IProfileDao {
 
     @SqlUpdate("insert into profiles (user_id, nickname, biography, email, banner_key, profile_image_key, birthday)" +
-            " values (:userId, :nickname, :biography, :email, :bannerKey, :profileImageKey, :birthday")
+            " values  (:userId, :nickname, :biography," +
+            " :email, :bannerKey, :profileImageKey, :birthday)")
     @GetGeneratedKeys
     int createProfile(@BindBean BungeeProfile profile);
 
