@@ -41,7 +41,6 @@ public class AccountService {
     public LoginResponse login(LoginRequest request) {
         BungeeUserDetails user = databaseService.getAccountDao().findByUsername(request.getUsername());
         if (user == null) {
-            log.info("bu user yok kardeşim sg");
             return new LoginResponse(LoginResponseType.USER_NOT_EXIST, null);
         }
         if (!bCryptPasswordEncoder.matches(request.getPassword(), user.getPassword())) {
@@ -60,7 +59,6 @@ public class AccountService {
 
         // check if username already exists
         if (this.databaseService.getAccountDao().isExistByUsername(request.getUsername())) {
-            log.info("username exists");
             return new RegisterResponse(RegisterResponseType.USERNAME_OR_EMAIL_EXISTS);
         }
 

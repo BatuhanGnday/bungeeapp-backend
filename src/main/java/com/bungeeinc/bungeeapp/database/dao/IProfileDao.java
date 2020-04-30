@@ -19,9 +19,9 @@ public interface IProfileDao {
     @RegisterColumnMapper(BungeeProfile.Mapper.class)
     BungeeProfile getByUserId(int id);
 
-    @SqlUpdate("update profiles set nickname = :nickname, biography = :biography, email = :email," +
+    @SqlUpdate("update profiles set nickname = :nickname, biography = :biography, private = :private, email = :email," +
             " banner_key = :bannerKey, profile_image_key = :profileImageKey, birthday = :birthday " +
-            "where user_id = userId")
+            "where user_id = :userId")
     void updateProfile(@BindBean BungeeProfile profile);
 
 }

@@ -1,6 +1,5 @@
 package com.bungeeinc.bungeeapp.api.service;
 
-import com.bungeeinc.bungeeapp.api.annotation.activeuser.ActiveUser;
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.profile.setprivate.response.SetPrivateResponse;
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.profile.setprivate.response.SetPrivateResponseType;
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.profile.show.response.ProfileResponse;
@@ -11,14 +10,15 @@ import com.bungeeinc.bungeeapp.database.DatabaseService;
 import com.bungeeinc.bungeeapp.database.models.BungeeProfile;
 import com.bungeeinc.bungeeapp.database.models.Post;
 import com.bungeeinc.bungeeapp.database.models.account.BungeeUserDetails;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 @Service
+@Slf4j
 public class ProfileService {
 
     private final DatabaseService databaseService;
@@ -34,6 +34,9 @@ public class ProfileService {
         String biography = profile.getBiography();
         boolean blockedByViewer = false;
         boolean countryBlock = false;
+        Date birthday = profile.getBirthday();
+        String banner = profile.getBannerKey();
+        String email = profile.getEmail();
         int followCount = databaseService.getUserFollowingsDao().numberOfFollowed(profile.getUserId());
         boolean isFollowed = databaseService.getUserFollowingsDao().isFollow(userDetails.getId(), profile.getUserId());
         int followedByCount = databaseService.getUserFollowingsDao().numberOfFollowers(profile.getUserId());
@@ -46,8 +49,13 @@ public class ProfileService {
         String username = databaseService.getAccountDao().getById(id).getUsername();
         List<Post> posts = databaseService.getPostDao().getByUserId(id);
 
-        return new ProfileResponse(biography, blockedByViewer, countryBlock, followCount, isFollowed, followedByCount,
-                nickname, profileUserId, joinedRecently, isPrivate, isVerified, profileImage, username, posts);
+        return new ProfileResponse(
+                id, nickname, biography, isPrivate,
+                email, profileImage, banner, birthday,
+                blockedByViewer, countryBlock, followCount,
+                isFollowed, followedByCount, joinedRecently,
+                isVerified, posts
+        );
     }
 
     public UpdateProfileResponse updateProfile(UpdateProfileRequest request, BungeeUserDetails userDetails) {
@@ -81,6 +89,7 @@ public class ProfileService {
             return new SetPrivateResponse(SetPrivateResponseType.FAILED);
         }
         profile.setPrivate(true);
+        databaseService.getProfileDao().updateProfile(profile);
         return new SetPrivateResponse(SetPrivateResponseType.SUCCESS);
     }
 }
