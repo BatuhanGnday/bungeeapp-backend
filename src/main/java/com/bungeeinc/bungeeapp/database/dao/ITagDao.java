@@ -6,8 +6,8 @@ import org.jdbi.v3.sqlobject.customizer.Bind;
 import org.jdbi.v3.sqlobject.statement.GetGeneratedKeys;
 import org.jdbi.v3.sqlobject.statement.SqlQuery;
 import org.jdbi.v3.sqlobject.statement.SqlUpdate;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+
+import java.util.List;
 
 public interface ITagDao {
 
@@ -15,7 +15,10 @@ public interface ITagDao {
     @GetGeneratedKeys
     int addTag(@Bind("postId") int postId, @Bind("tag") String tag);
 
-    @SqlQuery("select * from posts inner join tags on post_id = posts.id and tags.tag = :tag")
+    @SqlQuery("select * from posts inner join tags on post_id = posts.id and tags.tag = :tag limit 10 offset :page")
     @RegisterColumnMapper(Post.Mapper.class)
-    Page<Post> getPostsWithTag(@Bind("tag") String tag,Pageable pageable);
+    List<Post> getPostsByTag(@Bind("tag") String tag, @Bind("page") int page);
+
+    @SqlQuery("select count(*) from tags")
+    int getCount();
 }
