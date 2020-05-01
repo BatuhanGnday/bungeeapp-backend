@@ -1,5 +1,6 @@
 package com.bungeeinc.bungeeapp.api.service;
 
+import com.bungeeinc.bungeeapp.api.helper.post.PostHelper;
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.post.get.response.GetPostsResponse;
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.post.get.response.GetPostsResponseType;
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.post.share.request.ShareRequest;
@@ -10,6 +11,9 @@ import com.bungeeinc.bungeeapp.database.models.Post;
 import com.bungeeinc.bungeeapp.database.models.account.BungeeUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class PostService {
@@ -32,7 +36,19 @@ public class PostService {
      * @return ShareResponse
      */
     public ShareResponse share(BungeeUserDetails user, ShareRequest request) {
-        databaseService.getPostDao().createPost(new Post(user.getId(),request.getText(), request.getImageKey()));
+
+        Post post = new Post(user.getId(), request.getText(), request.getImageKey());
+        List tags = new ArrayList(PostHelper.findTags(request.getText()));
+
+        post.setId(
+                databaseService.getPostDao().createPost(post)
+        );
+
+        for (Object tag : tags) {
+            databaseService.getTagDao().addTag(post.getId(), tag.toString());
+        }
+
+
         return new ShareResponse(ShareResponseType.SUCCESS);
     }
 
