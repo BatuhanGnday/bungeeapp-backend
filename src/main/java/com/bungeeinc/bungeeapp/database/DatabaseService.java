@@ -11,10 +11,13 @@ import org.springframework.stereotype.Service;
 public class DatabaseService {
 
     @Getter
-    private IUserDao userDao;
+    private IAccountDao accountDao;
 
     @Getter
     private IPostDao postDao;
+
+    @Getter
+    private IProfileDao profileDao;
 
     @Getter
     private IUserFollowingsDao userFollowingsDao;
@@ -25,11 +28,16 @@ public class DatabaseService {
     @Getter
     private IUserBlocksDao userBlocksDao;
 
+    @Getter
+    private ITagDao tagDao;
+
     @Bean
     private Jdbi jdbi() throws Exception {
-        Jdbi jdbi = Jdbi.create("jdbc:mysql://localhost:3306/bungeeappdb?useSSL=false", "root", "roottoor");
+        Jdbi jdbi = Jdbi.create("jdbc:mysql://64.227.118.33:3306/bungeeappdb?useSSL=false", "admin", "bungeepass170");
         jdbi.installPlugin(new SqlObjectPlugin());
-        this.userDao = jdbi.onDemand(IUserDao.class);
+        this.accountDao = jdbi.onDemand(IAccountDao.class);
+        this.profileDao = jdbi.onDemand(IProfileDao.class);
+        this.tagDao = jdbi.onDemand(ITagDao.class);
         this.postDao = jdbi.onDemand(IPostDao.class);
         this.userFollowingsDao = jdbi.onDemand(IUserFollowingsDao.class);
         this.mentionDao = jdbi.onDemand(IMentionDao.class);

@@ -1,14 +1,15 @@
 package com.bungeeinc.bungeeapp.api.service;
 
-import com.bungeeinc.bungeeapp.api.service.model.endpoint.followers.incoming.GetFollowRequestResponse;
-import com.bungeeinc.bungeeapp.api.service.model.UserModelSummary;
-import com.bungeeinc.bungeeapp.api.service.model.endpoint.followers.ids.GetFollowersIdsResponse;
-import com.bungeeinc.bungeeapp.api.service.model.endpoint.followers.list.GetFollowingsResponse;
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.followers.GetFollowersResponseType;
+import com.bungeeinc.bungeeapp.api.service.model.endpoint.followers.ids.GetFollowersIdsResponse;
+import com.bungeeinc.bungeeapp.api.service.model.endpoint.followers.incoming.GetFollowRequestResponse;
+import com.bungeeinc.bungeeapp.api.service.model.endpoint.followers.list.GetFollowingsResponse;
 import com.bungeeinc.bungeeapp.database.DatabaseService;
-import com.bungeeinc.bungeeapp.database.models.user.User;
+import com.bungeeinc.bungeeapp.database.models.BungeeProfile;
+import com.bungeeinc.bungeeapp.database.models.account.BungeeUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -19,39 +20,45 @@ public class FollowerService {
     private final DatabaseService databaseService;
 
     @Autowired
-    public FollowerService(DatabaseService databaseService, UserService userService) {
+    public FollowerService(DatabaseService databaseService) {
         this.databaseService = databaseService;
     }
 
-    public GetFollowingsResponse getFollowers(User activeUser, int id) {
+    /**
+     *
+     * @param activeUser ActiveUser
+     * @return list of profiles which are follow active user
+     */
+    public GetFollowingsResponse getFollowers(BungeeUserDetails activeUser) {
 
-        return new GetFollowingsResponse(userToFollowingUserResponseModel(activeUser,
-                databaseService.getUserFollowingsDao().getFollowers(id)), GetFollowersResponseType.SUCCESSFUL);
-    }
+        // create list
+        List<BungeeProfile> followers = new ArrayList<>(
+                databaseService.getUserFollowingsDao().getFollowers(activeUser.getId())
+        );
 
-    public GetFollowRequestResponse getFollowRequests(User user) {
-        return new GetFollowRequestResponse(userToFollowingUserResponseModel(user,
-                databaseService.getUserFollowingsDao().getIncomingRequests(user.getId())));
-    }
-
-    private List<UserModelSummary> userToFollowingUserResponseModel(User activeUser, List<User> userList) {
-
-        if (userList.isEmpty()) {
-            return Collections.emptyList();
+        if (followers.isEmpty()) {
+            return new GetFollowingsResponse(null, GetFollowersResponseType.UNABLE_TO_GET_FOLLOWERS);
         }
 
-        List<UserModelSummary> responseModelList = new ArrayList<>();
-        for(User user : userList) {
-            int id = user.getId();
-            String username = user.getUsername();
-            String fullName = user.getFirstName() + " " + user.getLastName();
-            String imageKey = user.getImageKey();
-            boolean isFollowedByActiveUser = databaseService.getUserFollowingsDao()
-                    .isFollow(activeUser.getId(), user.getId());
-            responseModelList.add(new
-                    UserModelSummary(id, username, fullName, imageKey, isFollowedByActiveUser));
+        return new GetFollowingsResponse(followers, GetFollowersResponseType.SUCCESSFUL);
+    }
+
+    /**
+     *
+     * @param user ActiveUser
+     * @return list of profiles which are send to active user follow request
+     */
+    public GetFollowRequestResponse getFollowRequests(BungeeUserDetails user) {
+
+        List<BungeeProfile> followRequests = new ArrayList<>(
+                databaseService.getUserFollowingsDao().getIncomingRequests(user.getId())
+        );
+
+        if (followRequests.isEmpty()) {
+            return new GetFollowRequestResponse(null);
         }
-        return responseModelList;
+
+        return new GetFollowRequestResponse(followRequests);
     }
 
 

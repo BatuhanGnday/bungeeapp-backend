@@ -1,9 +1,6 @@
 package com.bungeeinc.bungeeapp.api.service.jwtconfig;
 
-import com.bungeeinc.bungeeapp.api.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -29,7 +26,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     JwtRequestFilter jwtRequestFilter;
 
     @Autowired
-    public WebSecurityConfig(JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint, UserDetailsService userDetailsService, JwtRequestFilter jwtRequestFilter) {
+    public WebSecurityConfig(JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint,
+                             UserDetailsService userDetailsService,
+                             JwtRequestFilter jwtRequestFilter) {
         this.jwtAuthenticationEntryPoint = jwtAuthenticationEntryPoint;
         this.userDetailsService = userDetailsService;
         this.jwtRequestFilter = jwtRequestFilter;
@@ -52,7 +51,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     protected void configure(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.csrf().disable()
-                .authorizeRequests().antMatchers("/users/auth","/users/sign-up").permitAll()
+                .authorizeRequests().antMatchers("/accounts/login", "/accounts/sign-up").permitAll()
                 .anyRequest().authenticated().and()
                 .exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint)
                 .and().sessionManagement()

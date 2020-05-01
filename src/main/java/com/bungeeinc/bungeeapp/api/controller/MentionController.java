@@ -4,7 +4,7 @@ import com.bungeeinc.bungeeapp.api.annotation.activeuser.ActiveUser;
 import com.bungeeinc.bungeeapp.api.service.MentionService;
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.mentions.create.request.CreateMentionRequest;
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.mentions.create.response.CreateMentionResponse;
-import com.bungeeinc.bungeeapp.database.models.user.User;
+import com.bungeeinc.bungeeapp.database.models.account.BungeeUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,7 +22,7 @@ public class MentionController {
     }
 
     @PostMapping("/create")
-    public CreateMentionResponse createMention(@ActiveUser User user, @RequestParam(value = "post_id") int postId,
+    public CreateMentionResponse createMention(@ActiveUser BungeeUserDetails user, @RequestParam(value = "post_id") int postId,
                                                @RequestBody @Valid CreateMentionRequest request) {
         return mentionService.createMention(user, postId, request);
     }
