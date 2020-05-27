@@ -8,6 +8,7 @@ import com.bungeeinc.bungeeapp.api.service.model.endpoint.post.share.response.Sh
 import com.bungeeinc.bungeeapp.database.models.account.BungeeUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
 import javax.validation.Valid;
 
 @RestController
@@ -22,12 +23,12 @@ public class PostController {
     }
 
     @PostMapping("/share")
-    public ShareResponse shareResponse(@RequestBody @Valid ShareRequest request, @ActiveUser BungeeUserDetails user){
+    public ShareResponse shareResponse(@RequestBody @Valid ShareRequest request, @ActiveUser BungeeUserDetails user) {
         return postService.share(user, request);
     }
 
     @GetMapping("/{id}")
-    public GetPostsResponse getPostsResponse(@PathVariable int id){
+    public GetPostsResponse getPostsResponse(@PathVariable int id) {
         return postService.getPosts(id);
     }
 }

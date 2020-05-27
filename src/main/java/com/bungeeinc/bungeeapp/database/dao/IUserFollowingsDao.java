@@ -7,6 +7,7 @@ import org.jdbi.v3.sqlobject.statement.SqlQuery;
 import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface IUserFollowingsDao {
 
@@ -18,17 +19,17 @@ public interface IUserFollowingsDao {
             "user_followings.user_id = profiles.user_id and following_user_id = :id " +
             "and request_accepted = 1")
     @RegisterColumnMapper(BungeeProfile.Mapper.class)
-    List<BungeeProfile> getFollowers(@Bind("id") int id);
+    List<BungeeProfile> getFollowers(@Bind("id") Optional<Integer> id);
 
     @SqlQuery("select user_id from user_followings where following_user_id = :id and request_accepted = 1")
-    List<Integer> getFollowersIds(@Bind("id") int id);
+    List<Integer> getFollowersIds(@Bind("id") Optional<Integer> id);
 
     @SqlQuery("select following_user_id from user_followings where user_id = :id")
     List<Integer> getFollowingsIds(@Bind("id") int id);
 
     @SqlQuery("select * from profiles inner join user_followings on following_user_id = profiles.user_id and user_id = :id")
     @RegisterColumnMapper(BungeeProfile.Mapper.class)
-    List<BungeeProfile> getFollowings(@Bind("id") int id);
+    List<BungeeProfile> getFollowings(@Bind("id") Optional<Integer> id);
 
     @SqlQuery("select * from profiles inner join user_followings on user_id = profiles.user_id and " +
             "following_user_id = :id and request_accepted = 0")

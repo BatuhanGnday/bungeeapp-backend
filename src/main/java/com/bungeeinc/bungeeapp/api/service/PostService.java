@@ -1,6 +1,7 @@
 package com.bungeeinc.bungeeapp.api.service;
 
 import com.bungeeinc.bungeeapp.api.helper.post.PostHelper;
+import com.bungeeinc.bungeeapp.api.service.model.commonrequests.UserIdRequest;
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.post.get.response.GetPostsResponse;
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.post.get.response.GetPostsResponseType;
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.post.share.request.ShareRequest;

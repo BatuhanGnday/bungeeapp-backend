@@ -10,6 +10,8 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 public class GetFollowingsResponse {
-    List<BungeeProfile> followers;
+    List<BungeeProfile> followings;
+
+    //TODO: Change type
     GetFollowersResponseType type;
 }

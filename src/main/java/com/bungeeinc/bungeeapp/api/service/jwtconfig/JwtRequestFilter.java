@@ -20,9 +20,6 @@ import java.util.Collections;
 @Slf4j
 @Component
 public class JwtRequestFilter extends OncePerRequestFilter {
-
-
-
     private JwtUserDetailsService jwtUserDetailsService;
 
     private JwtTokenUtil tokenUtil;

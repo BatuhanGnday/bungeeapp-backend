@@ -59,7 +59,7 @@ public class AccountService {
 
         // check if username already exists
         if (this.databaseService.getAccountDao().isExistByUsername(request.getUsername())) {
-            return new RegisterResponse(RegisterResponseType.USERNAME_OR_EMAIL_EXISTS);
+            return new RegisterResponse(RegisterResponseType.USERNAME_EXISTS);
         }
 
         BungeeUserDetails user = new BungeeUserDetails(

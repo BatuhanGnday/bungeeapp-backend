@@ -8,4 +8,5 @@ import lombok.Getter;
 public class CreateMentionRequest {
     String text;
     String imageKey;
+    int postId;
 }

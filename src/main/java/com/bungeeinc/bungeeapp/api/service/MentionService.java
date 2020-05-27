@@ -19,14 +19,14 @@ public class MentionService {
         this.databaseService = databaseService;
     }
 
-    public CreateMentionResponse createMention(BungeeUserDetails user, int postId, CreateMentionRequest request) {
+    public CreateMentionResponse createMention(BungeeUserDetails user, CreateMentionRequest request) {
 
-        if (!databaseService.getPostDao().isExist(postId)) {
+        if (!databaseService.getPostDao().isExist(request.getPostId())) {
             return new CreateMentionResponse(null, CreateMentionResponseType.POST_DOES_NOT_EXISTS);
         }
 
         Mention mention = new Mention(
-                postId,
+                request.getPostId(),
                 user.getId(),
                 request.getText(),
                 request.getImageKey()

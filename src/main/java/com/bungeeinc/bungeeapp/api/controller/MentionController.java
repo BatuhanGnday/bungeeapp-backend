@@ -22,8 +22,10 @@ public class MentionController {
     }
 
     @PostMapping("/create")
-    public CreateMentionResponse createMention(@ActiveUser BungeeUserDetails user, @RequestParam(value = "post_id") int postId,
-                                               @RequestBody @Valid CreateMentionRequest request) {
-        return mentionService.createMention(user, postId, request);
+    public CreateMentionResponse createMention(
+            @ActiveUser BungeeUserDetails user,
+            @RequestBody @Valid CreateMentionRequest request
+    ) {
+        return mentionService.createMention(user, request);
     }
 }

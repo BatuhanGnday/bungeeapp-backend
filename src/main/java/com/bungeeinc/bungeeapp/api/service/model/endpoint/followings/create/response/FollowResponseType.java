@@ -3,4 +3,5 @@ package com.bungeeinc.bungeeapp.api.service.model.endpoint.followings.create.res
 public enum FollowResponseType {
     FAILED,
     SUCCESS,
+    NO_SUCH_PROFILE
 }

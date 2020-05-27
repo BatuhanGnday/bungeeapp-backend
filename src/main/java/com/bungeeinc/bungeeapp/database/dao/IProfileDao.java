@@ -7,6 +7,8 @@ import org.jdbi.v3.sqlobject.statement.GetGeneratedKeys;
 import org.jdbi.v3.sqlobject.statement.SqlQuery;
 import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 
+import java.util.Optional;
+
 public interface IProfileDao {
 
     @SqlUpdate("insert into profiles (user_id, nickname, biography, email, banner_key, profile_image_key, birthday)" +
@@ -23,5 +25,8 @@ public interface IProfileDao {
             " banner_key = :bannerKey, profile_image_key = :profileImageKey, birthday = :birthday " +
             "where user_id = :userId")
     void updateProfile(@BindBean BungeeProfile profile);
+
+    @SqlQuery("select count(*) from profiles where user_id = ?")
+    boolean isExistById(Optional<Integer> id);
 
 }

@@ -32,28 +32,46 @@ public class ProfileService {
         BungeeProfile profile = databaseService.getProfileDao().getByUserId(id);
 
         String biography = profile.getBiography();
+
         boolean blockedByViewer = false;
+
         boolean countryBlock = false;
+
         Date birthday = profile.getBirthday();
+
         String banner = profile.getBannerKey();
+
         String email = profile.getEmail();
-        int followCount = databaseService.getUserFollowingsDao().numberOfFollowed(profile.getUserId());
-        boolean isFollowed = databaseService.getUserFollowingsDao().isFollow(userDetails.getId(), profile.getUserId());
-        int followedByCount = databaseService.getUserFollowingsDao().numberOfFollowers(profile.getUserId());
+
+        int followingCount = databaseService.getUserFollowingsDao().numberOfFollowed(profile.getUserId());
+
+        int followerCount = databaseService
+                .getUserFollowingsDao()
+                .numberOfFollowers(profile.getUserId());
+
+        boolean isFollowed = databaseService
+                .getUserFollowingsDao()
+                .isFollow(userDetails.getId(),
+                        profile.getUserId()
+                );
+
         String nickname = profile.getNickname();
-        int profileUserId = profile.getUserId();
+
         boolean joinedRecently = isJoinedRecently(id);
+
         boolean isPrivate = profile.isPrivate();
+
         boolean isVerified = false;
+
         String profileImage = profile.getProfileImageKey();
-        String username = databaseService.getAccountDao().getById(id).getUsername();
+
         List<Post> posts = databaseService.getPostDao().getByUserId(id);
 
         return new ProfileResponse(
                 id, nickname, biography, isPrivate,
                 email, profileImage, banner, birthday,
-                blockedByViewer, countryBlock, followCount,
-                isFollowed, followedByCount, joinedRecently,
+                blockedByViewer, countryBlock, followingCount,
+                isFollowed, followerCount, joinedRecently,
                 isVerified, posts
         );
     }
@@ -75,6 +93,7 @@ public class ProfileService {
 
         return new UpdateProfileResponse(UpdateProfileResponseType.SUCCESS);
     }
+
     private boolean isJoinedRecently(int userId) {
         Date currentTime = new Date();
         long createdOnLong = databaseService.getAccountDao().getById(userId).getCreatedOn().getTime();

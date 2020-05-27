@@ -23,18 +23,19 @@ public class ProfileController {
         this.profileService = profileService;
     }
 
-    @GetMapping("/show")
-    public ProfileResponse show(@RequestParam(value = "user_id") int id, @ActiveUser BungeeUserDetails userDetails) {
-        return profileService.showProfile(id, userDetails);
+    @GetMapping("/{userId}}")
+    public ProfileResponse show(@PathVariable("userId") int userId, @ActiveUser BungeeUserDetails userDetails) {
+        return profileService.showProfile(userId, userDetails);
     }
 
     @PutMapping("/update")
     public UpdateProfileResponse update(@RequestBody @Valid UpdateProfileRequest request,
-                                        @ActiveUser BungeeUserDetails userDetails){
+                                        @ActiveUser BungeeUserDetails userDetails) {
         return profileService.updateProfile(request, userDetails);
     }
+
     @PutMapping("/set-private")
-    public SetPrivateResponse setPrivate (@ActiveUser BungeeUserDetails userDetails) {
+    public SetPrivateResponse setPrivate(@ActiveUser BungeeUserDetails userDetails) {
         return profileService.setPrivate(userDetails);
     }
 }
