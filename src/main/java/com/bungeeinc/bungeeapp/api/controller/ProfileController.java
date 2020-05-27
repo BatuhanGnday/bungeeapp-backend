@@ -23,7 +23,7 @@ public class ProfileController {
         this.profileService = profileService;
     }
 
-    @GetMapping("/{userId}}")
+    @GetMapping("/{userId}")
     public ProfileResponse show(@PathVariable("userId") int userId, @ActiveUser BungeeUserDetails userDetails) {
         return profileService.showProfile(userId, userDetails);
     }
