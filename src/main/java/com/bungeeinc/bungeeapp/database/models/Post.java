@@ -3,7 +3,6 @@ package com.bungeeinc.bungeeapp.database.models;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
 import org.jdbi.v3.core.mapper.ColumnMapper;
 import org.jdbi.v3.core.statement.StatementContext;
 
@@ -50,7 +49,6 @@ public class Post {
             return post;
         }
     }
-
 
 
 }

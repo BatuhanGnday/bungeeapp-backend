@@ -1,9 +1,6 @@
 package com.bungeeinc.bungeeapp.api.service;
 
 import com.bungeeinc.bungeeapp.api.helper.post.PostHelper;
-import com.bungeeinc.bungeeapp.api.service.model.commonrequests.UserIdRequest;
-import com.bungeeinc.bungeeapp.api.service.model.endpoint.post.get.response.GetPostsResponse;
-import com.bungeeinc.bungeeapp.api.service.model.endpoint.post.get.response.GetPostsResponseType;
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.post.share.request.ShareRequest;
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.post.share.response.ShareResponse;
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.post.share.response.ShareResponseType;
@@ -23,6 +20,7 @@ public class PostService {
 
     /**
      * Constructor
+     *
      * @param databaseService DatabaseService
      */
     @Autowired
@@ -32,7 +30,8 @@ public class PostService {
 
     /**
      * Shares a post
-     * @param user User
+     *
+     * @param user    User
      * @param request ShareRequest
      * @return ShareResponse
      */
@@ -51,9 +50,5 @@ public class PostService {
 
 
         return new ShareResponse(ShareResponseType.SUCCESS);
-    }
-
-    public GetPostsResponse getPosts(int id) {
-        return new GetPostsResponse(databaseService.getPostDao().getByUserId(id), GetPostsResponseType.SUCCESSFUL);
     }
 }

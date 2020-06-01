@@ -2,6 +2,7 @@ package com.bungeeinc.bungeeapp.api.controller;
 
 import com.bungeeinc.bungeeapp.api.annotation.activeuser.ActiveUser;
 import com.bungeeinc.bungeeapp.api.service.ProfileService;
+import com.bungeeinc.bungeeapp.api.service.model.endpoint.post.get.response.GetPostsResponse;
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.profile.setprivate.response.SetPrivateResponse;
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.profile.show.response.ProfileResponse;
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.profile.update.request.UpdateProfileRequest;
@@ -24,8 +25,8 @@ public class ProfileController {
     }
 
     @GetMapping("/{userId}")
-    public ProfileResponse show(@PathVariable("userId") int userId, @ActiveUser BungeeUserDetails userDetails) {
-        return profileService.showProfile(userId, userDetails);
+    public ProfileResponse show(@PathVariable("userId") int userId, @ActiveUser BungeeUserDetails activeUser) {
+        return profileService.showProfile(userId, activeUser);
     }
 
     @PutMapping("/update")
@@ -37,5 +38,11 @@ public class ProfileController {
     @PutMapping("/set-private")
     public SetPrivateResponse setPrivate(@ActiveUser BungeeUserDetails userDetails) {
         return profileService.setPrivate(userDetails);
+    }
+
+    @GetMapping("/{userId}/posts")
+    public GetPostsResponse getPostsResponse(@PathVariable("userId") int userId,
+                                             @ActiveUser BungeeUserDetails activeUser) {
+        return profileService.getPostsById(userId, activeUser);
     }
 }

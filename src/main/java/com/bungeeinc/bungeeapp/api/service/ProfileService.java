@@ -1,5 +1,9 @@
 package com.bungeeinc.bungeeapp.api.service;
 
+import com.bungeeinc.bungeeapp.api.exception.NoSuchProfileException;
+import com.bungeeinc.bungeeapp.api.service.model.endpoint.post.get.response.GetPostsResponse;
+import com.bungeeinc.bungeeapp.api.service.model.endpoint.post.get.response.GetPostsResponseType;
+import com.bungeeinc.bungeeapp.api.service.model.endpoint.post.get.response.PostContent;
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.profile.setprivate.response.SetPrivateResponse;
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.profile.setprivate.response.SetPrivateResponseType;
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.profile.show.response.ProfileResponse;
@@ -14,6 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -39,9 +44,9 @@ public class ProfileService {
 
         Date birthday = profile.getBirthday();
 
-        String banner = profile.getBannerKey();
-
         String email = profile.getEmail();
+
+        String banner = profile.getBannerKey();
 
         int followingCount = databaseService.getUserFollowingsDao().numberOfFollowed(profile.getUserId());
 
@@ -65,14 +70,16 @@ public class ProfileService {
 
         String profileImage = profile.getProfileImageKey();
 
-        List<Post> posts = databaseService.getPostDao().getByUserId(id);
+        if (profile.isPrivate()) {
+            email = null;
+        }
 
         return new ProfileResponse(
                 id, nickname, biography, isPrivate,
                 email, profileImage, banner, birthday,
                 blockedByViewer, countryBlock, followingCount,
                 isFollowed, followerCount, joinedRecently,
-                isVerified, posts
+                isVerified
         );
     }
 
@@ -95,6 +102,9 @@ public class ProfileService {
     }
 
     private boolean isJoinedRecently(int userId) {
+        if (databaseService.getAccountDao().getById(userId) == null) {
+            throw new NoSuchProfileException();
+        }
         Date currentTime = new Date();
         long createdOnLong = databaseService.getAccountDao().getById(userId).getCreatedOn().getTime();
         long currentTimeLong = currentTime.getTime();
@@ -110,5 +120,40 @@ public class ProfileService {
         profile.setPrivate(true);
         databaseService.getProfileDao().updateProfile(profile);
         return new SetPrivateResponse(SetPrivateResponseType.SUCCESS);
+    }
+
+    /**
+     * @param userId     profile id clients wants to see its posts.
+     * @param activeUser client
+     * @return Post List
+     */
+    public GetPostsResponse getPostsById(int userId, BungeeUserDetails activeUser) {
+        BungeeProfile profile = databaseService.getProfileDao().getByUserId(userId);
+        BungeeUserDetails account = databaseService.getAccountDao().getById(userId);
+
+        BungeeProfile activeProfile = databaseService.getProfileDao().getByUserId(activeUser.getId());
+
+        if (profile.isPrivate()) {
+            if (!databaseService.getUserFollowingsDao().isFollow(activeProfile.getUserId(), profile.getUserId())) {
+                return new GetPostsResponse(null, GetPostsResponseType.FAILED);
+            }
+        }
+
+        List<Post> posts = databaseService.getPostDao().getByUserId(userId);
+        List<PostContent> contents = new ArrayList<>();
+
+        for (Post post : posts) {
+            String profileImage = profile.getProfileImageKey();
+            String username = account.getUsername();
+            String nickname = profile.getNickname();
+            String text = post.getText();
+            Date sharedOn = post.getSharedOn();
+            String image = post.getImageKey();
+            // TODO: implement like service
+            int numOfLike = 100;
+            contents.add(new PostContent(profileImage, username, nickname, text, sharedOn, image, numOfLike));
+        }
+
+        return new GetPostsResponse(contents, GetPostsResponseType.SUCCESSFUL);
     }
 }
