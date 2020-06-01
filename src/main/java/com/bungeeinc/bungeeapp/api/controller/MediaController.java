@@ -5,11 +5,11 @@ import com.bungeeinc.bungeeapp.api.service.MediaService;
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.media.profilephotos.update.response.UpdateProfilePhotoResponse;
 import com.bungeeinc.bungeeapp.database.models.account.BungeeUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @RestController
 @RequestMapping("/media")
@@ -22,9 +22,14 @@ public class MediaController {
         this.mediaService = mediaService;
     }
 
-    @PostMapping("profile-photos/update")
+    @PostMapping("/avatar/update")
     public UpdateProfilePhotoResponse updateProfilePhoto(@RequestParam("imageFile") MultipartFile file,
                                                          @ActiveUser BungeeUserDetails activeUser) {
         return mediaService.updateProfilePhoto(file, activeUser);
+    }
+
+    @GetMapping("/avatar/owner/{userId}")
+    public ResponseEntity<byte[]> getProfilePhoto(@PathVariable int userId) throws IOException {
+        return mediaService.getProfilePhoto(userId);
     }
 }

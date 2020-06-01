@@ -27,7 +27,7 @@ public class BungeeProfile {
 
     String bannerKey;
 
-    String profileImageKey;
+    String avatarUUID;
 
     Date birthday;
 
@@ -42,7 +42,7 @@ public class BungeeProfile {
             boolean isPrivate = r.getBoolean("private");
             String email = r.getString("email");
             String bannerKey = r.getString("banner_key");
-            String profileImageKey = r.getString("profile_image_key");
+            String avatarUUID = r.getString("avatar_uuid");
             Date birthday = r.getDate("birthday");
 
             BungeeProfile profile = new BungeeProfile(userId);
@@ -52,7 +52,7 @@ public class BungeeProfile {
             profile.setPrivate(isPrivate);
             profile.setEmail(email);
             profile.setBannerKey(bannerKey);
-            profile.setProfileImageKey(profileImageKey);
+            profile.setAvatarUUID(avatarUUID);
             profile.setBirthday(birthday);
 
             return profile;

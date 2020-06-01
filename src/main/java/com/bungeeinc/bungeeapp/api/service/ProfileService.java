@@ -68,7 +68,7 @@ public class ProfileService {
 
         boolean isVerified = false;
 
-        String profileImage = profile.getProfileImageKey();
+        String avatarUUID = profile.getAvatarUUID();
 
         if (profile.isPrivate()) {
             email = null;
@@ -76,7 +76,7 @@ public class ProfileService {
 
         return new ProfileResponse(
                 id, nickname, biography, isPrivate,
-                email, profileImage, banner, birthday,
+                email, avatarUUID, banner, birthday,
                 blockedByViewer, countryBlock, followingCount,
                 isFollowed, followerCount, joinedRecently,
                 isVerified
@@ -95,7 +95,7 @@ public class ProfileService {
         profile.setPrivate(request.isPrivate());
         profile.setEmail(request.getEmail());
         profile.setBannerKey(request.getBannerKey());
-        profile.setProfileImageKey(request.getProfileImageKey());
+        profile.setAvatarUUID(request.getAvatarUUID());
         profile.setBirthday(request.getBirthday());
 
         return new UpdateProfileResponse(UpdateProfileResponseType.SUCCESS);
@@ -143,7 +143,6 @@ public class ProfileService {
         List<PostContent> contents = new ArrayList<>();
 
         for (Post post : posts) {
-            String profileImage = profile.getProfileImageKey();
             String username = account.getUsername();
             String nickname = profile.getNickname();
             String text = post.getText();
@@ -151,7 +150,7 @@ public class ProfileService {
             String image = post.getImageKey();
             // TODO: implement like service
             int numOfLike = 100;
-            contents.add(new PostContent(profileImage, username, nickname, text, sharedOn, image, numOfLike));
+            contents.add(new PostContent(userId, username, nickname, text, sharedOn, image, numOfLike));
         }
 
         return new GetPostsResponse(contents, GetPostsResponseType.SUCCESSFUL);

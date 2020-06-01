@@ -8,7 +8,7 @@ import java.util.Date;
 @AllArgsConstructor
 @Getter
 public class PostContent {
-    String profileImage;
+    int userId;
     String username;
     String nickname;
     String text;

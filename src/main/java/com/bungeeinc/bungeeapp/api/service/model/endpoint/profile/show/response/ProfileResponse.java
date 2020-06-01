@@ -9,20 +9,20 @@ import java.util.Date;
 @Getter
 public class ProfileResponse {
 
-    private int id;
-    private String nickname;
-    private String biography;
-    private boolean isPrivate;
-    private String email;
-    private String profilePicImageKey;
-    private String bannerKey;
-    private Date birthday;
-    private boolean blockedByViewer;
-    private boolean countryBlock;
-    private int followingCount;
-    private boolean isFollowed;
-    private int followerCount;
-    private boolean isJoinedRecently;
+    private final int id;
+    private final String nickname;
+    private final String biography;
+    private final boolean isPrivate;
+    private final String email;
+    private final String profilePicImageKey;
+    private final String bannerKey;
+    private final Date birthday;
+    private final boolean blockedByViewer;
+    private final boolean countryBlock;
+    private final int followingCount;
+    private final boolean isFollowed;
+    private final int followerCount;
+    private final boolean isJoinedRecently;
     // TODO: add verified to profile entity
-    private boolean isVerified;
+    private final boolean isVerified;
 }

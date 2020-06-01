@@ -2,6 +2,7 @@ package com.bungeeinc.bungeeapp.api.service.model.endpoint.profile.update.reques
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
 import java.util.Date;
 
 @NoArgsConstructor
@@ -18,7 +19,7 @@ public class UpdateProfileRequest {
 
     String bannerKey;
 
-    String profileImageKey;
+    String avatarUUID;
 
     Date birthday;
 }
