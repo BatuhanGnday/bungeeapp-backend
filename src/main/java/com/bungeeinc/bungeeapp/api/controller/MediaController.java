@@ -1,7 +1,7 @@
 package com.bungeeinc.bungeeapp.api.controller;
 
 import com.bungeeinc.bungeeapp.api.annotation.activeuser.ActiveUser;
-import com.bungeeinc.bungeeapp.api.service.model.MediaService;
+import com.bungeeinc.bungeeapp.api.service.MediaService;
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.media.profilephotos.update.response.UpdateProfilePhotoResponse;
 import com.bungeeinc.bungeeapp.database.models.account.BungeeUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;

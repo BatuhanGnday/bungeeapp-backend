@@ -1,4 +1,4 @@
-package com.bungeeinc.bungeeapp.api.service.model;
+package com.bungeeinc.bungeeapp.api.service;
 
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.media.profilephotos.update.response.UpdateProfilePhotoResponse;
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.media.profilephotos.update.response.UpdateProfilePhotoResponseType;
