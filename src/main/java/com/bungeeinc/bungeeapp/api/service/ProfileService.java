@@ -143,7 +143,6 @@ public class ProfileService {
         List<PostContent> contents = new ArrayList<>();
 
         for (Post post : posts) {
-            String username = account.getUsername();
             String nickname = profile.getNickname();
             String text = post.getText();
             Date sharedOn = post.getSharedOn();
