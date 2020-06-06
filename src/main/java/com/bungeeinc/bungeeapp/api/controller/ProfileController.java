@@ -45,4 +45,9 @@ public class ProfileController {
                                              @ActiveUser BungeeUserDetails activeUser) {
         return profileService.getPostsById(userId, activeUser);
     }
+
+    @GetMapping("/feed")
+    public GetPostsResponse getFeed(@ActiveUser BungeeUserDetails activeUser) {
+        return profileService.getFeed(activeUser);
+    }
 }

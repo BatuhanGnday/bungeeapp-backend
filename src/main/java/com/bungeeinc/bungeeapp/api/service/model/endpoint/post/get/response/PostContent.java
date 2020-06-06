@@ -9,7 +9,6 @@ import java.util.Date;
 @Getter
 public class PostContent {
     int userId;
-    String username;
     String nickname;
     String text;
     Date sharedOn;

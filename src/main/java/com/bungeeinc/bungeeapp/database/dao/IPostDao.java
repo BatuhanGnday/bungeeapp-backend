@@ -23,4 +23,10 @@ public interface IPostDao {
 
     @SqlQuery("select count(*) from posts where id = :id")
     boolean isExist(@Bind("id") int id);
+
+    @SqlQuery("select * from posts where user_id in " +
+            "(select user_followings.following_user_id from user_followings where user_followings.user_id = :id)" +
+            " order by shared_on desc;")
+    @RegisterColumnMapper((Post.Mapper.class))
+    List<Post> getFeed(@Bind("id") int userId);
 }

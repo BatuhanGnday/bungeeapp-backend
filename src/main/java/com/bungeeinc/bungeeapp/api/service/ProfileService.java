@@ -150,9 +150,31 @@ public class ProfileService {
             String image = post.getImageKey();
             // TODO: implement like service
             int numOfLike = 100;
-            contents.add(new PostContent(userId, username, nickname, text, sharedOn, image, numOfLike));
+            contents.add(new PostContent(userId, nickname, text, sharedOn, image, numOfLike));
         }
 
         return new GetPostsResponse(contents, GetPostsResponseType.SUCCESSFUL);
+    }
+
+    public GetPostsResponse getFeed(BungeeUserDetails activeUser) {
+        List<Post> feed = new ArrayList<>(databaseService.getPostDao().getFeed(activeUser.getId()));
+        List<PostContent> posts = new ArrayList<>();
+
+        for (Post post : feed) {
+            int id = post.getUserId();
+            BungeeProfile profile = databaseService.getProfileDao().getByUserId(id);
+            String nickname = profile.getNickname();
+            String text = post.getText();
+            Date sharedOn = post.getSharedOn();
+            String image = post.getImageKey();
+            int numOfLike = 100;
+            posts.add(new PostContent(id, nickname, text, sharedOn, image, numOfLike));
+        }
+
+        if (posts.isEmpty()) {
+            return new GetPostsResponse(null, GetPostsResponseType.FAILED);
+        }
+
+        return new GetPostsResponse(posts, GetPostsResponseType.SUCCESSFUL);
     }
 }
