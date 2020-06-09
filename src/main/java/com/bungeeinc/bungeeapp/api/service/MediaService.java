@@ -1,8 +1,8 @@
 package com.bungeeinc.bungeeapp.api.service;
 
 import com.bungeeinc.bungeeapp.api.config.Config;
-import com.bungeeinc.bungeeapp.api.service.model.endpoint.media.profilephotos.update.response.UpdateProfilePhotoResponse;
-import com.bungeeinc.bungeeapp.api.service.model.endpoint.media.profilephotos.update.response.UpdateProfilePhotoResponseType;
+import com.bungeeinc.bungeeapp.api.service.model.endpoint.media.profilephotos.update.response.UploadFileResponse;
+import com.bungeeinc.bungeeapp.api.service.model.endpoint.media.profilephotos.update.response.UploadFileResponseType;
 import com.bungeeinc.bungeeapp.database.DatabaseService;
 import com.bungeeinc.bungeeapp.database.models.BungeeProfile;
 import com.bungeeinc.bungeeapp.database.models.account.BungeeUserDetails;
@@ -19,6 +19,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -32,13 +34,13 @@ public class MediaService {
         this.databaseService = databaseService;
     }
 
-    public UpdateProfilePhotoResponse updateProfilePhoto(MultipartFile file, BungeeUserDetails activeUser) {
+    public UploadFileResponse updateProfilePhoto(MultipartFile file, BungeeUserDetails activeUser) {
 
         BungeeProfile activeProfile = databaseService.getProfileDao().getByUserId(activeUser.getId());
 
         if (!file.getContentType().startsWith("image/")) {
             log.warn("Invalid file extension. File type was: " + file.getContentType());
-            return new UpdateProfilePhotoResponse(UpdateProfilePhotoResponseType.INVALID_FILE_TYPE);
+            return new UploadFileResponse(UploadFileResponseType.INVALID_FILE_TYPE, null);
         }
 
         String fileName = file.getOriginalFilename().replace(file.getOriginalFilename(),
@@ -46,16 +48,18 @@ public class MediaService {
                         + FilenameUtils.getExtension(file.getOriginalFilename().toLowerCase()));
 
         Path fileNameAndPath = Paths.get(Config.AVATAR_DIRECTORY, fileName);
+        List<String> fileUUIDs = new ArrayList<>();
 
         activeProfile.setAvatarUUID(fileName);
         databaseService.getProfileDao().updateProfile(activeProfile);
+        fileUUIDs.add(fileName);
 
         try {
             Files.write(fileNameAndPath, file.getBytes());
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return new UpdateProfilePhotoResponse(UpdateProfilePhotoResponseType.SUCCESSFUL);
+        return new UploadFileResponse(UploadFileResponseType.SUCCESSFUL, fileUUIDs);
 
     }
 
@@ -72,5 +76,38 @@ public class MediaService {
                 .contentType(MediaType.IMAGE_JPEG)
                 .body(Files.readAllBytes(file.toPath()));
 
+    }
+
+    public UploadFileResponse uploadMedia(MultipartFile[] files) {
+        if (files.length > 4) {
+            log.warn("File limit exceeded while uploading files.");
+            return new UploadFileResponse(UploadFileResponseType.FILE_LIMIT_EXCEEDED, null);
+        }
+
+        for (MultipartFile file : files) {
+            if (!file.getContentType().startsWith("image/")) {
+                log.warn("Invalid file extension. File type was: " + file.getContentType());
+                return new UploadFileResponse(UploadFileResponseType.INVALID_FILE_TYPE, null);
+            }
+        }
+
+        List<String> fileUUIDs = new ArrayList<>();
+
+        for (MultipartFile file : files) {
+            String fileName = file.getOriginalFilename().replace(file.getOriginalFilename(),
+                    FilenameUtils.getBaseName(UUID.randomUUID().toString()) + "."
+                            + FilenameUtils.getExtension(file.getOriginalFilename().toLowerCase()));
+
+            Path fileNameAndPath = Paths.get(Config.POST_MEDIA_DIRECTORY, fileName);
+            fileUUIDs.add(fileName);
+            try {
+                Files.write(fileNameAndPath, file.getBytes());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        }
+
+        return new UploadFileResponse(UploadFileResponseType.SUCCESSFUL, fileUUIDs);
     }
 }

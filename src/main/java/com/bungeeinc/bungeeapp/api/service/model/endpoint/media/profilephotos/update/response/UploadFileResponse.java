@@ -3,8 +3,11 @@ package com.bungeeinc.bungeeapp.api.service.model.endpoint.media.profilephotos.u
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+import java.util.List;
+
 @AllArgsConstructor
 @Getter
-public class UpdateProfilePhotoResponse {
-    UpdateProfilePhotoResponseType type;
+public class UploadFileResponse {
+    UploadFileResponseType type;
+    List<String> fileUUIDs;
 }
