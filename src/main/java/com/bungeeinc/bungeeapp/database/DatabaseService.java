@@ -6,9 +6,6 @@ import org.jdbi.v3.core.Jdbi;
 import org.jdbi.v3.sqlobject.SqlObjectPlugin;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.jdbc.metadata.HikariDataSourcePoolMetadata;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Service;
 
 import javax.sql.DataSource;
@@ -27,6 +24,7 @@ public class DatabaseService {
         this.userFollowingsDao = jdbi.onDemand(IUserFollowingsDao.class);
         this.mentionDao = jdbi.onDemand(IMentionDao.class);
         this.userBlocksDao = jdbi.onDemand(IUserBlocksDao.class);
+        this.postImageDao = jdbi.onDemand(IPostImageDao.class);
     }
 
     @Getter
@@ -49,5 +47,8 @@ public class DatabaseService {
 
     @Getter
     private ITagDao tagDao;
+
+    @Getter
+    private IPostImageDao postImageDao;
 
 }

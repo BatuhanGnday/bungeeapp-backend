@@ -3,8 +3,9 @@ package com.bungeeinc.bungeeapp.api.controller;
 import com.bungeeinc.bungeeapp.api.annotation.activeuser.ActiveUser;
 import com.bungeeinc.bungeeapp.api.service.ProfileService;
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.post.get.response.GetPostsResponse;
+import com.bungeeinc.bungeeapp.api.service.model.endpoint.profile.feed.response.FeedResponse;
+import com.bungeeinc.bungeeapp.api.service.model.endpoint.profile.get.response.ProfileResponse;
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.profile.setprivate.response.SetPrivateResponse;
-import com.bungeeinc.bungeeapp.api.service.model.endpoint.profile.show.response.ProfileResponse;
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.profile.update.request.UpdateProfileRequest;
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.profile.update.response.UpdateProfileResponse;
 import com.bungeeinc.bungeeapp.database.models.account.BungeeUserDetails;
@@ -47,7 +48,7 @@ public class ProfileController {
     }
 
     @GetMapping("/feed")
-    public GetPostsResponse getFeed(@ActiveUser BungeeUserDetails activeUser) {
+    public FeedResponse getFeed(@ActiveUser BungeeUserDetails activeUser) {
         return profileService.getFeed(activeUser);
     }
 }

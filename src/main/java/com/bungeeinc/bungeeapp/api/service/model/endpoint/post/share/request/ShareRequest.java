@@ -7,5 +7,5 @@ import lombok.NoArgsConstructor;
 @Getter
 public class ShareRequest {
     String text;
-    String imageKey;
+    String[] imageUUIDs;
 }

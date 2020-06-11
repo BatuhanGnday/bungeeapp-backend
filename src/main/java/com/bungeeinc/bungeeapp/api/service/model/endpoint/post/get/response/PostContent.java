@@ -4,14 +4,16 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import java.util.Date;
+import java.util.List;
 
 @AllArgsConstructor
 @Getter
 public class PostContent {
-    int userId;
+    String avatarUUID;
+    String username;
     String nickname;
-    String text;
+    String desc;
+    List<String> postImageUUIDs;
     Date sharedOn;
-    String image;
-    int numOfLike;
+    int likeCount;
 }

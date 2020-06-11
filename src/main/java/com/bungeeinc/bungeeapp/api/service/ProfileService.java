@@ -4,9 +4,10 @@ import com.bungeeinc.bungeeapp.api.exception.NoSuchProfileException;
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.post.get.response.GetPostsResponse;
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.post.get.response.GetPostsResponseType;
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.post.get.response.PostContent;
+import com.bungeeinc.bungeeapp.api.service.model.endpoint.profile.feed.response.FeedResponse;
+import com.bungeeinc.bungeeapp.api.service.model.endpoint.profile.get.response.ProfileResponse;
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.profile.setprivate.response.SetPrivateResponse;
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.profile.setprivate.response.SetPrivateResponseType;
-import com.bungeeinc.bungeeapp.api.service.model.endpoint.profile.show.response.ProfileResponse;
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.profile.update.request.UpdateProfileRequest;
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.profile.update.response.UpdateProfileResponse;
 import com.bungeeinc.bungeeapp.api.service.model.endpoint.profile.update.response.UpdateProfileResponseType;
@@ -19,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -129,8 +131,6 @@ public class ProfileService {
      */
     public GetPostsResponse getPostsById(int userId, BungeeUserDetails activeUser) {
         BungeeProfile profile = databaseService.getProfileDao().getByUserId(userId);
-        BungeeUserDetails account = databaseService.getAccountDao().getById(userId);
-
         BungeeProfile activeProfile = databaseService.getProfileDao().getByUserId(activeUser.getId());
 
         if (profile.isPrivate()) {
@@ -140,40 +140,73 @@ public class ProfileService {
         }
 
         List<Post> posts = databaseService.getPostDao().getByUserId(userId);
-        List<PostContent> contents = new ArrayList<>();
-
-        for (Post post : posts) {
-            String nickname = profile.getNickname();
-            String text = post.getText();
-            Date sharedOn = post.getSharedOn();
-            String image = post.getImageKey();
-            // TODO: implement like service
-            int numOfLike = 100;
-            contents.add(new PostContent(userId, nickname, text, sharedOn, image, numOfLike));
-        }
+        List<PostContent> contents = convertPostListToPostContentList(posts);
 
         return new GetPostsResponse(contents, GetPostsResponseType.SUCCESSFUL);
     }
 
-    public GetPostsResponse getFeed(BungeeUserDetails activeUser) {
-        List<Post> feed = new ArrayList<>(databaseService.getPostDao().getFeed(activeUser.getId()));
-        List<PostContent> posts = new ArrayList<>();
+    public FeedResponse getFeed(BungeeUserDetails activeUser) {
+        List<Post> posts = new ArrayList<>(databaseService.getPostDao().getFeed(activeUser.getId()));
+        List<PostContent> feed = convertPostListToPostContentList(posts);
 
-        for (Post post : feed) {
-            int id = post.getUserId();
-            BungeeProfile profile = databaseService.getProfileDao().getByUserId(id);
-            String nickname = profile.getNickname();
-            String text = post.getText();
-            Date sharedOn = post.getSharedOn();
-            String image = post.getImageKey();
-            int numOfLike = 100;
-            posts.add(new PostContent(id, nickname, text, sharedOn, image, numOfLike));
+        if (feed.isEmpty()) {
+            return new FeedResponse(null);
         }
 
-        if (posts.isEmpty()) {
-            return new GetPostsResponse(null, GetPostsResponseType.FAILED);
+        return new FeedResponse(feed);
+    }
+
+    private List<PostContent> convertPostListToPostContentList(List<Post> postList) {
+        if (postList.isEmpty()) {
+            return Collections.emptyList();
         }
 
-        return new GetPostsResponse(posts, GetPostsResponseType.SUCCESSFUL);
+        List<PostContent> contents = new ArrayList<>();
+
+        String avatarUUID;
+        String username;
+        String nickname;
+        String desc;
+        List<String> postImageUUIDs;
+        Date sharedOn;
+        int likeCount;
+
+        List<Integer> ids = new ArrayList<>();
+
+        for (Post post : postList) {
+            ids.add(post.getUserId());
+        }
+
+        List<BungeeUserDetails> accounts = databaseService.getAccountDao().getAccountsByIdList(ids);
+        List<BungeeProfile> profiles = databaseService.getProfileDao().getProfilesByIdList(ids);
+
+        for (Post post : postList) {
+            avatarUUID = profiles.stream()
+                    .filter(profile -> profile.getUserId() == post.getUserId())
+                    .findFirst()
+                    .get()
+                    .getAvatarUUID();
+
+            username = accounts.stream()
+                    .filter(account -> account.getId() == post.getUserId())
+                    .findFirst()
+                    .get()
+                    .getUsername();
+
+            nickname = profiles.stream()
+                    .filter(profile -> profile.getUserId() == post.getUserId())
+                    .findFirst()
+                    .get()
+                    .getNickname();
+
+            desc = post.getText();
+            postImageUUIDs = databaseService.getPostImageDao().getPostImageUUIDsByPostId(post.getId());
+            sharedOn = post.getSharedOn();
+            // TODO: implement
+            likeCount = 100;
+            contents.add(new PostContent(avatarUUID, username, nickname, desc, postImageUUIDs, sharedOn, likeCount));
+        }
+
+        return contents;
     }
 }

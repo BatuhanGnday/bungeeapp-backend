@@ -25,8 +25,9 @@ public class PostController {
     }
 
     @PostMapping("/share")
-    public ShareResponse shareResponse(@RequestBody @Valid ShareRequest request, @ActiveUser BungeeUserDetails user) {
+    public ShareResponse shareResponse(@RequestBody @Valid ShareRequest request,
+                                       @ActiveUser BungeeUserDetails user) {
         return postService.share(user, request);
     }
-    
+
 }

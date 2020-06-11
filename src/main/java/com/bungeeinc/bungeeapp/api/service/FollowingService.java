@@ -81,7 +81,7 @@ public class FollowingService {
             return new FollowResponse(FollowResponseType.FAILED);
         }
         if (followingProfile.isPrivate()) {
-            databaseService.getUserFollowingsDao().follow(user.getId(), followingProfile.getId(), Boolean.FALSE);
+            databaseService.getUserFollowingsDao().follow(user.getId(), followingProfile.getUserId(), Boolean.FALSE);
         } else {
             databaseService.getUserFollowingsDao().follow(user.getId(), request.getUserID(), Boolean.TRUE);
         }

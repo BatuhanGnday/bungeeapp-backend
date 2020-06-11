@@ -12,12 +12,12 @@ import java.util.List;
 
 public interface IPostDao {
 
-    @SqlUpdate("insert into posts (user_id, text, image_key)" +
-            " values (:userId, :text, :imageKey)")
+    @SqlUpdate("insert into posts (user_id, text)" +
+            " values (:userId, :text)")
     @GetGeneratedKeys
-    int createPost(@BindBean() Post post);
+    int createPost(@BindBean Post post);
 
-    @SqlQuery("select * from posts where user_id = :userId")
+    @SqlQuery("select * from posts where user_id = :userId order by shared_on desc")
     @RegisterColumnMapper(Post.Mapper.class)
     List<Post> getByUserId(@Bind("userId") int userId);
 
@@ -29,4 +29,8 @@ public interface IPostDao {
             " order by shared_on desc;")
     @RegisterColumnMapper(Post.Mapper.class)
     List<Post> getFeed(@Bind("id") int userId);
+
+    @SqlQuery("select * from posts where id = :postId")
+    @RegisterColumnMapper(Post.Mapper.class)
+    Post getById(@Bind("postId") int postId);
 }

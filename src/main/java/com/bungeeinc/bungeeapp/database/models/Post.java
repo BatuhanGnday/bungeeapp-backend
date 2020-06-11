@@ -22,14 +22,11 @@ public class Post {
     @NonNull
     private String text;
 
-    private String imageKey;
-
     private Timestamp sharedOn;
 
-    public Post(int userId, String text, String imageKey) {
+    public Post(int userId, String text) {
         this.userId = userId;
         this.text = text;
-        this.imageKey = imageKey;
     }
 
     public static class Mapper implements ColumnMapper<Post> {
@@ -39,10 +36,9 @@ public class Post {
             int id = r.getInt("id");
             int userId = r.getInt("user_id");
             String text = r.getString("text");
-            String imageKey = r.getString("image_key");
             Timestamp sharedOn = r.getTimestamp("shared_on");
 
-            Post post = new Post(userId, text, imageKey);
+            Post post = new Post(userId, text);
             post.setId(id);
             post.setSharedOn(sharedOn);
 

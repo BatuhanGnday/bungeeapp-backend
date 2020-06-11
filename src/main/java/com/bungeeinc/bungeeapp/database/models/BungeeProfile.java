@@ -12,8 +12,6 @@ import java.util.Date;
 @Data
 public class BungeeProfile {
 
-    int id;
-
     @NonNull
     int userId;
 
@@ -35,7 +33,6 @@ public class BungeeProfile {
 
         @Override
         public BungeeProfile map(ResultSet r, int columnNumber, StatementContext ctx) throws SQLException {
-            int id = r.getInt("id");
             int userId = r.getInt("user_id");
             String nickname = r.getString("nickname");
             String biography = r.getString("biography");
@@ -46,7 +43,6 @@ public class BungeeProfile {
             Date birthday = r.getDate("birthday");
 
             BungeeProfile profile = new BungeeProfile(userId);
-            profile.setId(id);
             profile.setNickname(nickname);
             profile.setBiography(biography);
             profile.setPrivate(isPrivate);
