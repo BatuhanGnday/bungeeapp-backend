@@ -1,24 +1,19 @@
 package com.bungeeinc.bungeeapp.api.service.jwtconfig;
 
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.security.Keys;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Component;
+
 import java.io.Serializable;
 import java.security.Key;
-import java.util.Base64;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jws;
-import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.io.Decoders;
-import io.jsonwebtoken.security.Keys;
-import io.jsonwebtoken.Jwts;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Component;
-
-import javax.crypto.Mac;
-import javax.servlet.http.HttpServletRequest;
 
 @Component
 public class JwtTokenUtil implements Serializable {
@@ -34,7 +29,6 @@ public class JwtTokenUtil implements Serializable {
     }
 
     /**
-     *
      * @param token jwt token
      * @return Expiration Date
      */
@@ -43,10 +37,9 @@ public class JwtTokenUtil implements Serializable {
     }
 
     /**
-     *
-     * @param token jwt token
+     * @param token          jwt token
      * @param claimsResolver claim resolver
-     * @param <T> generic
+     * @param <T>            generic
      * @return claims
      */
     public <T> T getClaimFromToken(String token, Function<Claims, T> claimsResolver) {
@@ -70,6 +63,7 @@ public class JwtTokenUtil implements Serializable {
         final Date expiration = getExpirationDateFromToken(token);
         return expiration.before(new Date());
     }
+
     private Key getSigningKey() {
         byte[] keyBytes = Decoders.BASE64.decode(secret);
         return Keys.hmacShaKeyFor(keyBytes);
@@ -80,7 +74,7 @@ public class JwtTokenUtil implements Serializable {
                 .setClaims(claims)
                 .setSubject(subject)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + JWT_TOKEN_VALIDITY  * 1000))
+                .setExpiration(new Date(System.currentTimeMillis() + JWT_TOKEN_VALIDITY * 1000))
                 .signWith(getSigningKey(), SignatureAlgorithm.HS512)
                 .compact();
     }

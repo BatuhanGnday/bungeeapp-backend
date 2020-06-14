@@ -19,10 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Service
 @Slf4j
@@ -149,10 +146,6 @@ public class ProfileService {
         List<Post> posts = new ArrayList<>(databaseService.getPostDao().getFeed(activeUser.getId()));
         List<PostContent> feed = convertPostListToPostContentList(posts);
 
-        if (feed.isEmpty()) {
-            return new FeedResponse(null);
-        }
-
         return new FeedResponse(feed);
     }
 
@@ -181,23 +174,20 @@ public class ProfileService {
         List<BungeeProfile> profiles = databaseService.getProfileDao().getProfilesByIdList(ids);
 
         for (Post post : postList) {
-            avatarUUID = profiles.stream()
+            Optional<BungeeProfile> bungeeProfile = profiles.stream()
                     .filter(profile -> profile.getUserId() == post.getUserId())
-                    .findFirst()
-                    .get()
-                    .getAvatarUUID();
+                    .findFirst();
+            assert bungeeProfile.isPresent() : "bungee profile must be present here";
 
-            username = accounts.stream()
+            Optional<BungeeUserDetails> bungeeUserDetails = accounts.stream()
                     .filter(account -> account.getId() == post.getUserId())
-                    .findFirst()
-                    .get()
-                    .getUsername();
+                    .findFirst();
 
-            nickname = profiles.stream()
-                    .filter(profile -> profile.getUserId() == post.getUserId())
-                    .findFirst()
-                    .get()
-                    .getNickname();
+            assert bungeeUserDetails.isPresent() : "bungeeUserDetails must be present";
+
+            avatarUUID = bungeeProfile.get().getAvatarUUID();
+            username = bungeeUserDetails.get().getUsername();
+            nickname = bungeeProfile.get().getNickname();
 
             desc = post.getText();
             postImageUUIDs = databaseService.getPostImageDao().getPostImageUUIDsByPostId(post.getId());
