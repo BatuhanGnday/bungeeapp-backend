@@ -17,7 +17,7 @@
     <properties>
         <lombok.version>1.18.10</lombok.version>
         <hibernate.version>5.4.10.Final</hibernate.version>
-        <mysql-connector.version>8.0.13</mysql-connector.version>
+        <mysql-connector.version>8.0.28</mysql-connector.version>
         <jdbi.version>3.12.0</jdbi.version>
     </properties>
 
